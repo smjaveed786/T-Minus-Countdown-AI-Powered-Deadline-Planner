@@ -1,0 +1,2905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CHRONOS // 2026 Deadline Lock Screen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #05070f;
+      --bg-navy: #080d1e;
+      --card-glass: rgba(14, 22, 42, 0.58);
+      --card-glass-hover: rgba(20, 32, 60, 0.72);
+      --card-border: rgba(120, 160, 255, 0.16);
+      --card-border-glow: rgba(0, 240, 255, 0.38);
+      --cyan-neon: #00f0ff;
+      --cyan-glow: rgba(0, 240, 255, 0.28);
+      --blue-accent: #3b82f6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --silver: #e2e8f0;
+      --gold-accent: #38bdf8;
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 15%, rgba(13, 30, 68, 0.6) 0%, transparent 60%),
+        radial-gradient(circle at 80% 85%, rgba(0, 70, 120, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 20% 70%, rgba(2, 20, 50, 0.4) 0%, transparent 50%);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      perspective: 1200px;
+    }
+
+    /* Ambient noise overlay */
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 99;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Top Control Ribbon */
+    .top-ribbon {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(10, 16, 32, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      border: 1px solid rgba(120, 160, 255, 0.18);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .top-ribbon button, .top-ribbon select {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-main);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .top-ribbon button:hover, .top-ribbon button.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .top-ribbon button.action-btn {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(59, 130, 246, 0.2));
+      border: 1px solid var(--card-border-glow);
+      color: var(--cyan-neon);
+    }
+
+    .top-ribbon button.action-btn:hover {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.35), rgba(59, 130, 246, 0.35));
+      box-shadow: 0 0 16px var(--cyan-glow);
+      color: #fff;
+    }
+
+    /* Main Container & Phone Chassis */
+    .chassis-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      margin: 40px auto 30px;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-style: preserve-3d;
+    }
+
+    /* Smartphone Bezel Styling */
+    .chassis-wrapper.with-phone {
+      padding: 14px;
+      background: linear-gradient(145deg, #2a3142, #141824 40%, #0d111a);
+      border-radius: 56px;
+      box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 25px 70px -10px rgba(0, 0, 0, 0.8),
+        0 50px 100px -20px rgba(0, 240, 255, 0.12),
+        inset 0 0 2px 1px rgba(255, 255, 255, 0.25);
+    }
+
+    .chassis-wrapper.with-phone::before {
+      content: '';
+      position: absolute;
+      top: 110px;
+      left: -3px;
+      width: 3px;
+      height: 48px;
+      background: #333c50;
+      border-radius: 2px 0 0 2px;
+      box-shadow: -1px 0 2px rgba(0,0,0,0.5);
+    }
+
+    .chassis-wrapper.with-phone::after {
+      content: '';
+      position: absolute;
+      top: 170px;
+      left: -3px;
+      width: 3px;
+      height: 48px;
+      background: #333c50;
+      border-radius: 2px 0 0 2px;
+      box-shadow: -1px 0 2px rgba(0,0,0,0.5);
+    }
+
+    .phone-right-button {
+      display: none;
+    }
+    .with-phone .phone-right-button {
+      display: block;
+      position: absolute;
+      top: 130px;
+      right: -3px;
+      width: 3px;
+      height: 72px;
+      background: #333c50;
+      border-radius: 0 2px 2px 0;
+      box-shadow: 1px 0 2px rgba(0,0,0,0.5);
+    }
+
+    /* Screen Frame (9:16 aspect ratio container) */
+    .lockscreen-viewport {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 19.5; /* iPhone / modern Android elongated 9:16+ proportion */
+      background: #060914;
+      border-radius: 46px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.9);
+      transform-style: preserve-3d;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .chassis-wrapper:not(.with-phone) .lockscreen-viewport {
+      border-radius: 28px;
+      border: 1px solid rgba(120, 160, 255, 0.15);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Dynamic Island / Camera Cutout */
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 32px;
+      background: #000000;
+      border-radius: 20px;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .dynamic-island .camera-lens {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #1e293b, #050505);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    .dynamic-island .camera-lens::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 3px;
+      height: 3px;
+      background: rgba(0, 240, 255, 0.5);
+      border-radius: 50%;
+    }
+
+    .dynamic-island .island-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9px;
+      font-family: var(--font-mono);
+      color: var(--cyan-neon);
+      letter-spacing: 0.05em;
+    }
+
+    .island-indicator .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan-neon);
+      box-shadow: 0 0 8px var(--cyan-neon);
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.15); box-shadow: 0 0 12px var(--cyan-neon); }
+    }
+
+    /* Phone Status Bar */
+    .status-bar {
+      position: relative;
+      height: 52px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 28px 0;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.8);
+      z-index: 30;
+    }
+
+    .status-bar .carrier-wifi {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-bar .battery-icon {
+      width: 22px;
+      height: 11px;
+      border: 1.5px solid rgba(255, 255, 255, 0.7);
+      border-radius: 3px;
+      padding: 1.5px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .status-bar .battery-icon::after {
+      content: '';
+      position: absolute;
+      right: -3.5px;
+      top: 2.5px;
+      width: 2px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 0 1px 1px 0;
+    }
+
+    .status-bar .battery-fill {
+      width: 82%;
+      height: 100%;
+      background: var(--cyan-neon);
+      border-radius: 1px;
+      box-shadow: 0 0 6px rgba(0, 240, 255, 0.4);
+    }
+
+    /* Three.js / Canvas Background */
+    #background-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Futuristic Grid & Atmospheric Lighting */
+    .ambient-grid {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      mask-image: radial-gradient(circle at 50% 40%, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(circle at 50% 40%, black 30%, transparent 80%);
+      pointer-events: none;
+    }
+
+    .radial-glow {
+      position: absolute;
+      top: 22%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.14) 0%, rgba(37, 99, 235, 0.08) 45%, transparent 70%);
+      filter: blur(40px);
+      z-index: 2;
+      pointer-events: none;
+      animation: ambientBreathe 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientBreathe {
+      0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; }
+      100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+    }
+
+    /* Lock Screen Scrollable Content */
+    .lockscreen-content {
+      position: relative;
+      z-index: 10;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 20px 24px;
+      overflow-y: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      transform-style: preserve-3d;
+    }
+
+    .lockscreen-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* 3D Parallax Master Layer */
+    .parallax-layer {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform-style: preserve-3d;
+      transition: transform 0.15s cubic-bezier(0.2, 0, 0.1, 1);
+    }
+
+    /* Section 1: Header & Deadline */
+    .header-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 6px;
+      margin-bottom: 12px;
+      transform: translateZ(25px);
+    }
+
+    .focus-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(14, 25, 48, 0.65);
+      border: 1px solid rgba(0, 240, 255, 0.28);
+      padding: 5px 14px;
+      border-radius: 9999px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan-neon);
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      margin-bottom: 12px;
+    }
+
+    .focus-badge .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan-neon);
+      box-shadow: 0 0 8px var(--cyan-neon);
+      animation: pulseGlow 1.8s infinite;
+    }
+
+    .deadline-title {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .deadline-date-heading {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 70%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 18px rgba(255, 255, 255, 0.15);
+      position: relative;
+    }
+
+    /* Section 2: Monumental 3D Countdown Display */
+    .countdown-container {
+      position: relative;
+      width: 100%;
+      margin: 8px 0 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform: translateZ(45px);
+    }
+
+    /* Subtle Energy Ring behind Countdown */
+    .energy-ring-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 310px;
+      height: 310px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .energy-ring-svg {
+      width: 100%;
+      height: 100%;
+      animation: rotateEnergyRing 40s linear infinite;
+    }
+
+    @keyframes rotateEnergyRing {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      width: 100%;
+      max-width: 380px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .countdown-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 4px 12px;
+      background: linear-gradient(160deg, rgba(30, 41, 69, 0.48) 0%, rgba(10, 16, 32, 0.7) 100%);
+      border: 1px solid rgba(140, 180, 255, 0.2);
+      border-radius: 18px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 
+        0 14px 35px -8px rgba(0, 0, 0, 0.7),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.5);
+      transform-style: preserve-3d;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .countdown-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      padding: 1px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(0, 240, 255, 0.12) 40%, transparent 80%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .countdown-card:hover {
+      border-color: rgba(0, 240, 255, 0.45);
+      box-shadow: 
+        0 18px 45px -5px rgba(0, 240, 255, 0.2),
+        inset 0 1px 3px rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px) translateZ(10px);
+    }
+
+    .countdown-digit {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(0, 240, 255, 0.3);
+      position: relative;
+      display: inline-block;
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-label {
+      font-family: var(--font-display);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Section 3: 3D Mission Progress Card */
+    .progress-card {
+      width: 100%;
+      background: linear-gradient(145deg, rgba(16, 26, 50, 0.6) 0%, rgba(9, 14, 28, 0.75) 100%);
+      border: 1px solid rgba(120, 160, 255, 0.18);
+      border-radius: 20px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      transform: translateZ(35px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .progress-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .progress-icon {
+      width: 14px;
+      height: 14px;
+      color: var(--cyan-neon);
+    }
+
+    .progress-title {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--silver);
+    }
+
+    .progress-percentage {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--cyan-neon);
+      text-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+    }
+
+    /* Segmented Cyber-Bar */
+    .progress-track {
+      position: relative;
+      height: 10px;
+      background: rgba(10, 15, 28, 0.85);
+      border-radius: 6px;
+      border: 1px solid rgba(120, 160, 255, 0.14);
+      overflow: hidden;
+      display: flex;
+      gap: 3px;
+      padding: 1.5px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0284c7, #00f0ff);
+      border-radius: 4px;
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.6);
+      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .progress-subtext {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 10px;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    /* Section 4: Three Milestone Cards */
+    .milestones-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+      transform: translateZ(30px);
+    }
+
+    .milestone-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(13, 20, 38, 0.55);
+      border: 1px solid rgba(120, 160, 255, 0.13);
+      border-radius: 14px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .milestone-card:hover {
+      background: rgba(18, 29, 56, 0.7);
+      border-color: rgba(0, 240, 255, 0.3);
+      transform: translateX(3px);
+    }
+
+    .milestone-card.completed {
+      border-color: rgba(56, 189, 248, 0.25);
+    }
+
+    .milestone-card.active {
+      border-color: rgba(0, 240, 255, 0.5);
+      background: linear-gradient(90deg, rgba(0, 240, 255, 0.08), rgba(16, 26, 50, 0.65));
+      box-shadow: 0 6px 20px -3px rgba(0, 240, 255, 0.16);
+    }
+
+    .milestone-index-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .milestone-card.completed .milestone-index-badge {
+      background: rgba(14, 165, 233, 0.18);
+      border: 1px solid rgba(14, 165, 233, 0.4);
+      color: #38bdf8;
+    }
+
+    .milestone-card.active .milestone-index-badge {
+      background: rgba(0, 240, 255, 0.25);
+      border: 1px solid var(--cyan-neon);
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+    }
+
+    .milestone-card.upcoming .milestone-index-badge {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      color: var(--text-dim);
+    }
+
+    .milestone-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .milestone-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    .milestone-name {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .milestone-status-tag {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .milestone-card.completed .milestone-status-tag {
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    .milestone-card.active .milestone-status-tag {
+      color: var(--cyan-neon);
+      background: rgba(0, 240, 255, 0.16);
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+    }
+
+    .milestone-card.upcoming .milestone-status-tag {
+      color: var(--text-dim);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .milestone-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Milestone & Timeline View Switcher */
+    .view-switcher-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      width: 100%;
+      transform: translateZ(32px);
+    }
+    .view-switch-btn {
+      background: rgba(14, 25, 48, 0.55);
+      border: 1px solid rgba(120, 160, 255, 0.15);
+      color: var(--text-dim);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .view-switch-btn:hover {
+      color: #fff;
+      border-color: rgba(0, 240, 255, 0.3);
+    }
+    .view-switch-btn.active {
+      color: var(--cyan-neon);
+      border-color: rgba(0, 240, 255, 0.4);
+      background: rgba(0, 240, 255, 0.12);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+    }
+
+    /* 6-Stage Timeline HUD */
+    .timeline-hud-container {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+      transform: translateZ(30px);
+    }
+    .timeline-hud-container.active {
+      display: flex;
+    }
+    .timeline-track-card {
+      background: rgba(13, 20, 38, 0.65);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 16px;
+      padding: 10px 12px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .timeline-nodes-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 8px;
+      padding: 4px 6px;
+    }
+    .timeline-nodes-row::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      right: 14px;
+      height: 2px;
+      background: linear-gradient(90deg, #38bdf8 0%, #00f0ff 60%, rgba(148, 163, 184, 0.3) 100%);
+      z-index: 1;
+    }
+    .timeline-node-item {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .timeline-node-item:hover {
+      transform: scale(1.15);
+    }
+    .node-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #0b1329;
+      border: 2px solid #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 800;
+      color: #94a3b8;
+    }
+    .timeline-node-item.done .node-dot {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #ffffff;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+    }
+    .timeline-node-item.active .node-dot {
+      background: #00f0ff;
+      border-color: #ffffff;
+      color: #030712;
+      box-shadow: 0 0 12px #00f0ff;
+      animation: pulseGlow 1.6s infinite;
+    }
+    .timeline-node-item.target .node-dot {
+      border-color: #f43f5e;
+      color: #f43f5e;
+    }
+    .node-name {
+      font-family: var(--font-display);
+      font-size: 8px;
+      font-weight: 700;
+      color: var(--text-dim);
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+    }
+    .timeline-node-item.done .node-name {
+      color: #38bdf8;
+    }
+    .timeline-node-item.active .node-name {
+      color: var(--cyan-neon);
+    }
+    .timeline-node-item.target .node-name {
+      color: #fca5a5;
+    }
+    .timeline-stage-detail {
+      background: rgba(10, 16, 32, 0.65);
+      border: 1px solid rgba(120, 160, 255, 0.15);
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+    }
+
+    /* Section 5: Priority Indicator & Next Milestone */
+    .indicator-strip {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+      transform: translateZ(25px);
+    }
+
+    .indicator-pill {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      background: rgba(10, 16, 32, 0.55);
+      border: 1px solid rgba(120, 160, 255, 0.12);
+      border-radius: 10px;
+      font-size: 10px;
+      color: var(--text-muted);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .indicator-pill strong {
+      color: var(--silver);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .indicator-icon {
+      width: 12px;
+      height: 12px;
+      color: var(--cyan-neon);
+      flex-shrink: 0;
+    }
+
+    /* Section 6: Motivation Card */
+    .motivation-card {
+      width: 100%;
+      text-align: center;
+      padding: 12px 14px;
+      background: linear-gradient(180deg, rgba(14, 22, 44, 0.45) 0%, rgba(6, 10, 20, 0.6) 100%);
+      border: 1px solid rgba(0, 240, 255, 0.18);
+      border-radius: 16px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      transform: translateZ(30px);
+    }
+
+    .motivation-quote {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cyan-neon);
+      margin-bottom: 4px;
+      text-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
+    }
+
+    .motivation-subtext {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    /* Lock Screen Bottom Bar */
+    .lockscreen-footer {
+      width: 100%;
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      z-index: 20;
+    }
+
+    .quick-actions {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .lock-action-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lock-action-btn:hover {
+      background: rgba(0, 240, 255, 0.2);
+      border-color: var(--cyan-neon);
+      transform: scale(1.08);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+    }
+
+    .home-indicator {
+      width: 134px;
+      height: 4.5px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 9999px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Modal / Settings Overlay */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 420px;
+      background: #0c1222;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 240, 255, 0.15);
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-field {
+      margin-bottom: 16px;
+    }
+
+    .modal-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .modal-field input, .modal-field textarea {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(120, 160, 255, 0.2);
+      border-radius: 10px;
+      color: #fff;
+      font-family: var(--font-main);
+      font-size: 13px;
+    }
+
+    .modal-field input:focus, .modal-field textarea:focus {
+      outline: none;
+      border-color: var(--cyan-neon);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .modal-btn {
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .modal-btn.primary {
+      background: var(--cyan-neon);
+      color: #030712;
+      font-weight: 700;
+    }
+
+    .modal-btn.primary:hover {
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.5);
+    }
+
+    .modal-btn.secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    /* Sound chime toggle indicator */
+    .sound-active-indicator {
+      color: var(--cyan-neon);
+    }
+
+    /* Toast Notification */
+    .toast-notify {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(10, 16, 32, 0.9);
+      border: 1px solid var(--cyan-neon);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px var(--cyan-glow);
+      backdrop-filter: blur(16px);
+      padding: 10px 20px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 150;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .toast-notify.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      body {
+        padding: 0;
+      }
+      .top-ribbon {
+        top: 8px;
+        scale: 0.9;
+      }
+      .chassis-wrapper {
+        margin: 50px auto 10px;
+        max-width: 100vw;
+        border-radius: 0;
+      }
+      .chassis-wrapper.with-phone {
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+      }
+      .chassis-wrapper.with-phone::before,
+      .chassis-wrapper.with-phone::after,
+      .with-phone .phone-right-button {
+        display: none;
+      }
+      .lockscreen-viewport {
+        border-radius: 0;
+        border: none;
+        height: 100vh;
+        aspect-ratio: auto;
+      }
+    }
+
+    /* ============================================================ */
+    /* DESKTOP MONITOR (16:9) & FULLSCREEN COMMAND CENTER STYLES    */
+    /* ============================================================ */
+    .dashboard-col {
+      display: contents;
+    }
+
+    .chassis-wrapper.mode-monitor {
+      max-width: 1440px;
+      width: 95vw;
+      margin: 64px auto 30px;
+      border-radius: 36px;
+      padding: 16px;
+      background: linear-gradient(145deg, #1e2638, #101524 40%, #080c16);
+      box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.15),
+        0 30px 100px -10px rgba(0, 0, 0, 0.9),
+        0 0 60px rgba(0, 240, 255, 0.15),
+        inset 0 0 2px 1px rgba(255, 255, 255, 0.2);
+    }
+
+    .chassis-wrapper.mode-monitor::before,
+    .chassis-wrapper.mode-monitor::after,
+    .chassis-wrapper.mode-monitor .phone-right-button {
+      display: none !important;
+    }
+
+    .chassis-wrapper.mode-monitor .lockscreen-viewport {
+      aspect-ratio: 16 / 9;
+      min-height: 720px;
+      max-height: 840px;
+      border-radius: 26px;
+    }
+
+    .chassis-wrapper.mode-monitor .status-bar,
+    .chassis-wrapper.mode-monitor .dynamic-island,
+    .chassis-wrapper.mode-monitor .lockscreen-footer {
+      display: none !important;
+    }
+
+    .mode-monitor .lockscreen-content {
+      padding: 24px 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mode-monitor .parallax-layer {
+      display: grid;
+      grid-template-columns: 340px 1fr 380px;
+      gap: 24px;
+      width: 100%;
+      max-width: 1360px;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    .mode-monitor .dashboard-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .mode-monitor .dashboard-col.left-col {
+      order: 1;
+    }
+
+    .mode-monitor .dashboard-col.center-col {
+      order: 2;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .mode-monitor .dashboard-col.right-col {
+      order: 3;
+    }
+
+    .mode-monitor .deadline-date-heading {
+      font-size: 36px;
+    }
+
+    .mode-monitor .countdown-container {
+      margin: 16px 0 20px;
+    }
+
+    .mode-monitor .energy-ring-wrapper {
+      width: 460px;
+      height: 460px;
+    }
+
+    .mode-monitor .countdown-grid {
+      max-width: 540px;
+      gap: 12px;
+    }
+
+    .mode-monitor .countdown-card {
+      padding: 20px 8px 16px;
+      border-radius: 22px;
+    }
+
+    .mode-monitor .countdown-digit {
+      font-size: 48px;
+    }
+
+    .mode-monitor .countdown-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      margin-top: 8px;
+    }
+
+    .mode-monitor .milestones-container {
+      margin-bottom: 0;
+    }
+
+    .mode-monitor .motivation-card {
+      margin-top: 4px;
+    }
+
+    /* True Fullscreen Styles */
+    body.is-fullscreen {
+      padding: 0 !important;
+      margin: 0 !important;
+      background: #04060d !important;
+      overflow: hidden !important;
+    }
+
+    body.is-fullscreen .chassis-wrapper {
+      max-width: 100vw !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+
+    body.is-fullscreen .lockscreen-viewport {
+      border-radius: 0 !important;
+      border: none !important;
+      height: 100vh !important;
+      width: 100vw !important;
+      aspect-ratio: auto !important;
+      max-height: none !important;
+    }
+
+    body.is-fullscreen .top-ribbon {
+      top: 12px;
+      opacity: 0.25;
+      transition: opacity 0.3s ease;
+    }
+
+    body.is-fullscreen .top-ribbon:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Micro-Texture Overlay -->
+  <div class="noise-overlay"></div>
+
+  <!-- Top Ribbon Control Toolbar -->
+  <div class="top-ribbon">
+    <button id="mode-phone-btn" class="active" title="Switch to Mobile Phone 9:16 layout">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+      <span>Mobile 9:16</span>
+    </button>
+    <button id="mode-monitor-btn" title="Switch to Desktop Monitor 16:9 layout">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+      <span>Monitor 16:9</span>
+    </button>
+    <button id="toggle-frame-btn" title="Toggle chassis frame">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+      <span id="frame-label">Frame: On</span>
+    </button>
+    <button id="fullscreen-btn" title="Toggle Fullscreen monitor display">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      <span>Fullscreen</span>
+    </button>
+    <button id="sound-btn" title="Toggle futuristic sound effects">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="sound-icon"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      <span id="sound-label">Audio: Off</span>
+    </button>
+    <button id="edit-deadline-btn" title="Customize deadline target">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span>Target</span>
+    </button>
+    <button class="action-btn" id="export-wallpaper-btn" title="Export 9:16 mobile wallpaper">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+      <span>Export 9:16</span>
+    </button>
+    <button class="action-btn" id="export-monitor-wallpaper-btn" title="Export 16:9 4K desktop monitor wallpaper" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.35), rgba(0, 240, 255, 0.35)); border-color: #38bdf8; color: #fff;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+      <span>Export 4K 16:9</span>
+    </button>
+  </div>
+
+  <!-- Main Smartphone Chassis -->
+  <div class="chassis-wrapper with-phone" id="chassis-wrapper">
+    <div class="phone-right-button"></div>
+
+    <!-- 9:16 Lock Screen Viewport -->
+    <div class="lockscreen-viewport" id="lockscreen-viewport">
+      
+      <!-- Interactive WebGL / Particle Background -->
+      <canvas id="background-canvas"></canvas>
+      
+      <!-- Subtle Grid & Volumetric Lighting -->
+      <div class="ambient-grid"></div>
+      <div class="radial-glow"></div>
+
+      <!-- iPhone Dynamic Island -->
+      <div class="dynamic-island">
+        <div class="island-indicator">
+          <span class="pulse-dot"></span>
+          <span>CHRONOS</span>
+        </div>
+        <div class="camera-lens"></div>
+      </div>
+
+      <!-- Top Phone Status Bar -->
+      <div class="status-bar">
+        <span id="clock-display" style="font-family: var(--font-display); letter-spacing: -0.01em;">09:41</span>
+        <div class="carrier-wifi">
+          <!-- 5G / Signal icon -->
+          <svg width="14" height="12" viewBox="0 0 18 14" fill="currentColor">
+            <rect x="0" y="10" width="3" height="4" rx="1"/>
+            <rect x="5" y="7" width="3" height="7" rx="1"/>
+            <rect x="10" y="4" width="3" height="10" rx="1"/>
+            <rect x="15" y="0" width="3" height="14" rx="1"/>
+          </svg>
+          <!-- Battery icon -->
+          <div class="battery-icon">
+            <div class="battery-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lock Screen Main Content Scroll -->
+      <div class="lockscreen-content" id="lockscreen-content">
+        <div class="parallax-layer" id="parallax-layer">
+
+          <!-- Left Column (Desktop Monitor Left Wing / Mobile Flow) -->
+          <div class="dashboard-col left-col">
+            <!-- Section 3: 3D Mission Progress Card -->
+            <div class="progress-card">
+              <div class="progress-header">
+                <div class="progress-title-wrap">
+                  <svg class="progress-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                  </svg>
+                  <span class="progress-title">MISSION PROGRESS</span>
+                </div>
+                <span class="progress-percentage" id="progress-val-text">80% COMPLETE</span>
+              </div>
+              
+              <div class="progress-track" title="Mission completion indicator">
+                <div class="progress-fill" id="progress-fill-bar" style="width: 80%;"></div>
+              </div>
+
+              <div class="progress-subtext">
+                <span>ACTIVE PHASE: EXECUTION</span>
+                <span id="progress-blocks-text">16 / 20 CYCLES DONE</span>
+              </div>
+            </div>
+
+            <!-- Section 5: Priority Indicator & Next Milestone -->
+            <div class="indicator-strip">
+              <div class="indicator-pill">
+                <svg class="indicator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <div><strong>PRIORITY:</strong> Polish UI & Verify</div>
+              </div>
+              <div class="indicator-pill" style="justify-content: flex-end;">
+                <div><strong>NEXT:</strong> Review 03 →</div>
+                <svg class="indicator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+
+            <!-- Section 6: Motivation Card -->
+            <div class="motivation-card">
+              <div class="motivation-quote">“ONE DEADLINE. ONE PLAN. ONE FINISH LINE.”</div>
+              <div class="motivation-subtext">Stay focused. Keep moving. Finish strong.</div>
+            </div>
+          </div>
+
+          <!-- Center Column (Focal Stage: 3D Countdown & Header) -->
+          <div class="dashboard-col center-col">
+            <!-- Section 1: Header / Status -->
+            <div class="header-section">
+              <div class="focus-badge">
+                <span class="live-dot"></span>
+                <span>FOCUS MODE — ACTIVE</span>
+              </div>
+              <div class="deadline-title">MY DEADLINE</div>
+              <div class="deadline-date-heading" id="target-date-heading">NOVEMBER 23, 2026</div>
+            </div>
+
+            <!-- Section 2: Monumental 3D Floating Countdown Timer -->
+            <div class="countdown-container">
+              <!-- Rotating Holographic Energy Ring -->
+              <div class="energy-ring-wrapper">
+                <svg class="energy-ring-svg" viewBox="0 0 300 300" fill="none">
+                  <circle cx="150" cy="150" r="140" stroke="rgba(0, 240, 255, 0.22)" stroke-width="1.2" stroke-dasharray="4 8" />
+                  <circle cx="150" cy="150" r="126" stroke="rgba(120, 160, 255, 0.15)" stroke-width="1" />
+                  <path d="M 150 10 A 140 140 0 0 1 290 150" stroke="url(#ringGrad)" stroke-width="2.5" stroke-linecap="round" />
+                  <path d="M 150 290 A 140 140 0 0 1 10 150" stroke="url(#ringGrad)" stroke-width="2" stroke-linecap="round" />
+                  <circle cx="290" cy="150" r="3.5" fill="#00f0ff" filter="drop-shadow(0 0 4px #00f0ff)" />
+                  <circle cx="10" cy="150" r="3" fill="#38bdf8" />
+                  <defs>
+                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.85" />
+                      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.05" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              <!-- 4 Glassmorphic 3D Countdown Blocks -->
+              <div class="countdown-grid">
+                <div class="countdown-card" id="card-days">
+                  <span class="countdown-digit" id="days-val">00</span>
+                  <span class="countdown-label">DAYS</span>
+                </div>
+                <div class="countdown-card" id="card-hours">
+                  <span class="countdown-digit" id="hours-val">00</span>
+                  <span class="countdown-label">HOURS</span>
+                </div>
+                <div class="countdown-card" id="card-minutes">
+                  <span class="countdown-digit" id="minutes-val">00</span>
+                  <span class="countdown-label">MINUTES</span>
+                </div>
+                <div class="countdown-card" id="card-seconds">
+                  <span class="countdown-digit" id="seconds-val">00</span>
+                  <span class="countdown-label">SECONDS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column (Desktop Monitor Right Wing / Milestones & Timeline) -->
+          <div class="dashboard-col right-col">
+            <!-- Milestone & Timeline View Switcher -->
+            <div class="view-switcher-bar">
+              <button class="view-switch-btn active" id="btn-view-gates" onclick="switchMilestoneView('gates')">3 Master Gates</button>
+              <button class="view-switch-btn" id="btn-view-timeline" onclick="switchMilestoneView('timeline')">6-Stage Timeline</button>
+            </div>
+
+            <!-- Section 4A: Three Elegant Milestone Cards (3 Master Gates) -->
+            <div class="milestones-container" id="milestones-gates-view">
+              <!-- 01 - PLAN -->
+              <div class="milestone-card completed" id="milestone-1" onclick="toggleMilestone(1)">
+                <div class="milestone-index-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="milestone-info">
+                  <div class="milestone-header-row">
+                    <span class="milestone-name">01 — PLAN</span>
+                    <span class="milestone-status-tag">ACHIEVED</span>
+                  </div>
+                  <div class="milestone-desc">Break the deadline into achievable tasks.</div>
+                </div>
+              </div>
+
+              <!-- 02 - BUILD -->
+              <div class="milestone-card active" id="milestone-2" onclick="toggleMilestone(2)">
+                <div class="milestone-index-badge">02</div>
+                <div class="milestone-info">
+                  <div class="milestone-header-row">
+                    <span class="milestone-name">02 — BUILD</span>
+                    <span class="milestone-status-tag">IN PROGRESS</span>
+                  </div>
+                  <div class="milestone-desc">Complete the project and prepare the final submission.</div>
+                </div>
+              </div>
+
+              <!-- 03 - SUBMIT -->
+              <div class="milestone-card upcoming" id="milestone-3" onclick="toggleMilestone(3)">
+                <div class="milestone-index-badge">03</div>
+                <div class="milestone-info">
+                  <div class="milestone-header-row">
+                    <span class="milestone-name">03 — SUBMIT</span>
+                    <span class="milestone-status-tag">UPCOMING</span>
+                  </div>
+                  <div class="milestone-desc">Review everything and submit before the deadline.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 4B: 6-Stage Backward Timeline HUD -->
+            <div class="timeline-hud-container" id="milestones-timeline-view">
+              <div class="timeline-track-card">
+                <div class="timeline-nodes-row">
+                  <div class="timeline-node-item done" onclick="showStageInfo(1)">
+                    <div class="node-dot">01</div>
+                    <div class="node-name">GOAL</div>
+                  </div>
+                  <div class="timeline-node-item done" onclick="showStageInfo(2)">
+                    <div class="node-dot">02</div>
+                    <div class="node-name">PREP</div>
+                  </div>
+                  <div class="timeline-node-item done" onclick="showStageInfo(3)">
+                    <div class="node-dot">03</div>
+                    <div class="node-name">BUILD</div>
+                  </div>
+                  <div class="timeline-node-item active" onclick="showStageInfo(4)">
+                    <div class="node-dot">04</div>
+                    <div class="node-name">TEST</div>
+                  </div>
+                  <div class="timeline-node-item" onclick="showStageInfo(5)">
+                    <div class="node-dot">05</div>
+                    <div class="node-name">REVIEW</div>
+                  </div>
+                  <div class="timeline-node-item target" onclick="showStageInfo(6)">
+                    <div class="node-dot">06</div>
+                    <div class="node-name">SUBMIT</div>
+                  </div>
+                </div>
+                <div class="timeline-stage-detail" id="timeline-stage-detail">
+                  <div>
+                    <strong style="color: var(--cyan-neon); font-size: 11px;" id="detail-stage-title">04 — TESTING &amp; POLISH</strong>
+                    <div style="color: var(--text-muted); font-size: 9px;" id="detail-stage-desc">Verify UX, edge cases, responsiveness &amp; performance.</div>
+                  </div>
+                  <div style="text-align: right; font-family: var(--font-mono); font-size: 9px;">
+                    <span style="color: var(--cyan-neon);" id="detail-stage-date">NOV 22 • 10PM PT</span>
+                    <div style="color: #38bdf8;" id="detail-stage-status">ACTIVE SPRINT</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Lock Screen Footer / Quick Actions -->
+      <div class="lockscreen-footer">
+        <div class="quick-actions">
+          <div class="lock-action-btn" id="flash-action" title="Toggle illumination">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="lock-action-btn" id="camera-action" title="Capture / Snapshot">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Settings / Target Customizer Modal -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-box">
+      <div class="modal-title">
+        <span>CHRONOS // CONFIGURATION</span>
+        <button id="close-modal-btn" style="background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer;">&times;</button>
+      </div>
+      <div class="modal-field">
+        <label for="input-target-date">Target Deadline (Date & Time)</label>
+        <input type="datetime-local" id="input-target-date" value="2026-11-23T23:59">
+      </div>
+      <div class="modal-field">
+        <label for="input-progress">Mission Progress (%)</label>
+        <input type="range" id="input-progress" min="0" max="100" value="80" style="width: 100%; accent-color: var(--cyan-neon);">
+        <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+          <span>0%</span>
+          <span id="modal-progress-readout">80%</span>
+          <span>100%</span>
+        </div>
+      </div>
+      <div class="modal-field">
+        <label for="input-priority">Today's Priority Note</label>
+        <input type="text" id="input-priority" value="Polish UI & Verify Submission">
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn secondary" id="reset-modal-btn">Reset Defaults</button>
+        <button class="modal-btn primary" id="save-modal-btn">Apply Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification element -->
+  <div class="toast-notify" id="toast-notify">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toast-message">Wallpaper exported successfully!</span>
+  </div>
+
+  <script>
+    // Configuration & State
+    let targetDeadline = new Date('2026-11-23T23:59:59').getTime();
+    let audioEnabled = false;
+    let audioCtx = null;
+    let progressPercent = 80;
+
+    // DOM Elements
+    const daysEl = document.getElementById('days-val');
+    const hoursEl = document.getElementById('hours-val');
+    const minutesEl = document.getElementById('minutes-val');
+    const secondsEl = document.getElementById('seconds-val');
+    const clockDisplayEl = document.getElementById('clock-display');
+    const targetHeadingEl = document.getElementById('target-date-heading');
+    const chassisWrapper = document.getElementById('chassis-wrapper');
+    const parallaxLayer = document.getElementById('parallax-layer');
+    const lockscreenViewport = document.getElementById('lockscreen-viewport');
+
+    // Synthesized Audio System (Zero external assets required)
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playFuturisticChime(freq = 880, duration = 0.08, type = 'sine') {
+      if (!audioEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, audioCtx.currentTime + duration);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function playTick() {
+      if (!audioEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.03);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.03);
+      } catch (e) {}
+    }
+
+    // Audio Toggle
+    const soundBtn = document.getElementById('sound-btn');
+    const soundLabel = document.getElementById('sound-label');
+    soundBtn.addEventListener('click', () => {
+      initAudio();
+      audioEnabled = !audioEnabled;
+      soundLabel.textContent = audioEnabled ? 'Audio: On' : 'Audio: Off';
+      soundBtn.classList.toggle('active', audioEnabled);
+      if (audioEnabled) {
+        playFuturisticChime(660, 0.15);
+        showToast('Futuristic UI audio effects enabled');
+      } else {
+        showToast('Audio effects muted');
+      }
+    });
+
+    // Toast notification
+    const toast = document.getElementById('toast-notify');
+    const toastMsg = document.getElementById('toast-message');
+    let toastTimeout;
+    function showToast(message) {
+      toastMsg.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Live Phone Status Clock Update
+    function updatePhoneClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      clockDisplayEl.textContent = `${h}:${m}`;
+    }
+    updatePhoneClock();
+    setInterval(updatePhoneClock, 1000);
+
+    // High Precision Countdown Loop
+    let lastSecond = -1;
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const diff = targetDeadline - now;
+
+      if (diff <= 0) {
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      daysEl.textContent = String(days).padStart(2, '0');
+      hoursEl.textContent = String(hours).padStart(2, '0');
+      minutesEl.textContent = String(minutes).padStart(2, '0');
+      secondsEl.textContent = String(seconds).padStart(2, '0');
+
+      if (seconds !== lastSecond) {
+        lastSecond = seconds;
+        // Subtle glow pulse on card seconds
+        const secCard = document.getElementById('card-seconds');
+        secCard.style.borderColor = 'rgba(0, 240, 255, 0.6)';
+        secCard.style.boxShadow = '0 0 20px rgba(0, 240, 255, 0.3)';
+        setTimeout(() => {
+          secCard.style.borderColor = '';
+          secCard.style.boxShadow = '';
+        }, 300);
+        playTick();
+      }
+    }
+    setInterval(updateCountdown, 250);
+    updateCountdown();
+
+    // Interactive 3D Gyro / Mouse Parallax
+    let bounds;
+    function refreshBounds() {
+      bounds = lockscreenViewport.getBoundingClientRect();
+    }
+    window.addEventListener('resize', refreshBounds);
+    refreshBounds();
+
+    document.addEventListener('mousemove', (e) => {
+      if (!bounds) return;
+      const x = (e.clientX - bounds.left) / bounds.width - 0.5;
+      const y = (e.clientY - bounds.top) / bounds.height - 0.5;
+
+      // Restrict tilt intensity for elegance
+      const rotateY = (x * 16).toFixed(2);
+      const rotateX = (-y * 16).toFixed(2);
+
+      parallaxLayer.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    document.addEventListener('mouseleave', () => {
+      parallaxLayer.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
+
+    // Mobile DeviceOrientation gyroscope support
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', (e) => {
+        if (e.gamma !== null && e.beta !== null) {
+          const gamma = Math.min(Math.max(e.gamma, -25), 25);
+          const beta = Math.min(Math.max(e.beta - 45, -25), 25);
+          parallaxLayer.style.transform = `rotateX(${-beta * 0.4}deg) rotateY(${gamma * 0.4}deg)`;
+        }
+      });
+    }
+
+    // Toggle Chassis Frame Mode
+    const toggleFrameBtn = document.getElementById('toggle-frame-btn');
+    toggleFrameBtn.addEventListener('click', () => {
+      chassisWrapper.classList.toggle('with-phone');
+      const isPhone = chassisWrapper.classList.contains('with-phone');
+      showToast(isPhone ? 'Smartphone frame enabled' : 'Clean wallpaper preview mode');
+      playFuturisticChime(520, 0.08);
+      refreshBounds();
+    });
+
+    // Milestone Interactive Toggles
+    function toggleMilestone(num) {
+      const card = document.getElementById(`milestone-${num}`);
+      playFuturisticChime(750 + num * 100, 0.1);
+      
+      if (card.classList.contains('upcoming')) {
+        card.classList.remove('upcoming');
+        card.classList.add('active');
+        card.querySelector('.milestone-status-tag').textContent = 'IN PROGRESS';
+        showToast(`Milestone 0${num} activated`);
+      } else if (card.classList.contains('active')) {
+        card.classList.remove('active');
+        card.classList.add('completed');
+        card.querySelector('.milestone-status-tag').textContent = 'ACHIEVED';
+        showToast(`Milestone 0${num} marked achieved!`);
+      } else {
+        card.classList.remove('completed');
+        card.classList.add('upcoming');
+        card.querySelector('.milestone-status-tag').textContent = 'UPCOMING';
+        showToast(`Milestone 0${num} reset to upcoming`);
+      }
+    }
+
+    // 6-Stage Timeline HUD Controller
+    const stagesData = [
+      { id: 1, title: '01 — GOAL DEFINITION', desc: 'Scope crystallization & rubric deconstruction.', date: 'NOV 17 • 6PM PT', status: 'ACHIEVED', color: '#38bdf8' },
+      { id: 2, title: '02 — RESEARCH & PREP', desc: 'Tech stack setup, boilerplate, wireframes.', date: 'NOV 18 • 8PM PT', status: 'ACHIEVED', color: '#38bdf8' },
+      { id: 3, title: '03 — MAIN EXECUTION', desc: 'Core architecture build-out (80% done).', date: 'NOV 21 • 8PM PT', status: 'FEATURE COMPLETE', color: '#38bdf8' },
+      { id: 4, title: '04 — TESTING & POLISH', desc: 'Verify UX, edge cases & performance.', date: 'NOV 22 • 10PM PT', status: 'ACTIVE SPRINT', color: '#00f0ff' },
+      { id: 5, title: '05 — FINAL REVIEW', desc: 'Rubric audit, documentation & proofreading.', date: 'NOV 23 • 6PM PT', status: 'IN QUEUE', color: '#94a3b8' },
+      { id: 6, title: '06 — SUBMISSION GATEWAY', desc: 'Upload, verify receipts (3h buffer before 11:59PM).', date: 'NOV 23 • 9PM PT', status: 'TARGET GATEWAY', color: '#f43f5e' }
+    ];
+
+    function switchMilestoneView(view) {
+      const gatesView = document.getElementById('milestones-gates-view');
+      const timelineView = document.getElementById('milestones-timeline-view');
+      const btnGates = document.getElementById('btn-view-gates');
+      const btnTimeline = document.getElementById('btn-view-timeline');
+      playFuturisticChime(580, 0.08);
+
+      if (view === 'timeline') {
+        gatesView.style.display = 'none';
+        timelineView.classList.add('active');
+        btnGates.classList.remove('active');
+        btnTimeline.classList.add('active');
+        showToast('6-Stage Backward Timeline View');
+      } else {
+        gatesView.style.display = 'flex';
+        timelineView.classList.remove('active');
+        btnGates.classList.add('active');
+        btnTimeline.classList.remove('active');
+        showToast('3 Master Gates View');
+      }
+    }
+
+    function showStageInfo(num) {
+      const data = stagesData.find(s => s.id === num);
+      if (!data) return;
+      playFuturisticChime(600 + num * 60, 0.08);
+      document.getElementById('detail-stage-title').textContent = data.title;
+      document.getElementById('detail-stage-desc').textContent = data.desc;
+      document.getElementById('detail-stage-date').textContent = data.date;
+      document.getElementById('detail-stage-status').textContent = data.status;
+      document.getElementById('detail-stage-status').style.color = data.color;
+      showToast(`Selected Stage 0${num}: ${data.title}`);
+    }
+
+    // Settings Modal
+    const settingsModal = document.getElementById('settings-modal');
+    const editBtn = document.getElementById('edit-deadline-btn');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const saveModalBtn = document.getElementById('save-modal-btn');
+    const resetModalBtn = document.getElementById('reset-modal-btn');
+    const inputTargetDate = document.getElementById('input-target-date');
+    const inputProgress = document.getElementById('input-progress');
+    const modalProgressReadout = document.getElementById('modal-progress-readout');
+
+    editBtn.addEventListener('click', () => {
+      settingsModal.classList.add('active');
+      playFuturisticChime(440, 0.08);
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      settingsModal.classList.remove('active');
+    });
+
+    inputProgress.addEventListener('input', (e) => {
+      modalProgressReadout.textContent = `${e.target.value}%`;
+    });
+
+    saveModalBtn.addEventListener('click', () => {
+      const selectedDate = new Date(inputTargetDate.value);
+      if (!isNaN(selectedDate.getTime())) {
+        targetDeadline = selectedDate.getTime();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        targetHeadingEl.textContent = selectedDate.toLocaleDateString('en-US', options).toUpperCase();
+      }
+
+      progressPercent = parseInt(inputProgress.value, 10);
+      document.getElementById('progress-fill-bar').style.width = `${progressPercent}%`;
+      document.getElementById('progress-val-text').textContent = `${progressPercent}% COMPLETE`;
+      document.getElementById('progress-blocks-text').textContent = `${Math.round(progressPercent * 0.2)} / 20 CYCLES DONE`;
+
+      settingsModal.classList.remove('active');
+      playFuturisticChime(880, 0.15);
+      showToast('Settings & Deadline updated successfully');
+      updateCountdown();
+    });
+
+    resetModalBtn.addEventListener('click', () => {
+      targetDeadline = new Date('2026-11-23T23:59:59').getTime();
+      targetHeadingEl.textContent = 'NOVEMBER 23, 2026';
+      inputTargetDate.value = '2026-11-23T23:59';
+      progressPercent = 80;
+      inputProgress.value = 80;
+      modalProgressReadout.textContent = '80%';
+      document.getElementById('progress-fill-bar').style.width = '80%';
+      document.getElementById('progress-val-text').textContent = '80% COMPLETE';
+      document.getElementById('progress-blocks-text').textContent = '16 / 20 CYCLES DONE';
+      showToast('Reset to default 23 Nov 2026 deadline');
+    });
+
+    // Flashlight & Camera quick actions feedback
+    document.getElementById('flash-action').addEventListener('click', () => {
+      playFuturisticChime(950, 0.06);
+      showToast('Illumination beam activated');
+    });
+    document.getElementById('camera-action').addEventListener('click', () => {
+      playFuturisticChime(1100, 0.08);
+      exportWallpaper();
+    });
+
+    // Particle Canvas Animation Engine
+    const canvas = document.getElementById('background-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationFrameId;
+
+    function resizeCanvas() {
+      const rect = lockscreenViewport.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor(w, h) {
+        this.reset(w, h, true);
+      }
+      reset(w, h, initial = false) {
+        this.x = Math.random() * w;
+        this.y = initial ? Math.random() * h : h + 10;
+        this.size = Math.random() * 1.8 + 0.6;
+        this.speedY = -(Math.random() * 0.4 + 0.15);
+        this.speedX = (Math.random() - 0.5) * 0.2;
+        this.alpha = Math.random() * 0.6 + 0.2;
+        this.pulseSpeed = Math.random() * 0.02 + 0.01;
+      }
+      update(w, h) {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        this.alpha += Math.sin(Date.now() * this.pulseSpeed) * 0.01;
+        if (this.y < -10 || this.x < -10 || this.x > w + 10) {
+          this.reset(w, h);
+        }
+      }
+      draw(context) {
+        context.save();
+        context.fillStyle = `rgba(0, 240, 255, ${Math.max(0.1, Math.min(0.8, this.alpha))})`;
+        context.shadowColor = '#00f0ff';
+        context.shadowBlur = 6;
+        context.beginPath();
+        context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        context.fill();
+        context.restore();
+      }
+    }
+
+    function initParticles() {
+      const rect = lockscreenViewport.getBoundingClientRect();
+      particles = [];
+      const count = 42;
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle(rect.width, rect.height));
+      }
+    }
+    initParticles();
+
+    function animateParticles() {
+      const rect = lockscreenViewport.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      for (let p of particles) {
+        p.update(rect.width, rect.height);
+        p.draw(ctx);
+      }
+      animationFrameId = requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // 4K High-Resolution 9:16 Wallpaper Exporter
+    // Renders the entire futuristic lockscreen at 1440x3120 (clean 9:19.5 OLED phone resolution)
+    function exportWallpaper() {
+      showToast('Generating 9:16 High-Res Wallpaper...');
+      playFuturisticChime(900, 0.2);
+
+      const expW = 1440;
+      const expH = 3120;
+      const offscreen = document.createElement('canvas');
+      offscreen.width = expW;
+      offscreen.height = expH;
+      const g = offscreen.getContext('2d');
+
+      // 1. Deep Space Luxury Gradient
+      const bgGrad = g.createLinearGradient(0, 0, 0, expH);
+      bgGrad.addColorStop(0, '#040711');
+      bgGrad.addColorStop(0.35, '#070d1e');
+      bgGrad.addColorStop(0.7, '#050917');
+      bgGrad.addColorStop(1, '#020409');
+      g.fillStyle = bgGrad;
+      g.fillRect(0, 0, expW, expH);
+
+      // Atmospheric Radial Light Behind Countdown
+      const radGlow = g.createRadialGradient(expW / 2, expH * 0.28, 40, expW / 2, expH * 0.28, 600);
+      radGlow.addColorStop(0, 'rgba(0, 240, 255, 0.22)');
+      radGlow.addColorStop(0.4, 'rgba(37, 99, 235, 0.12)');
+      radGlow.addColorStop(1, 'transparent');
+      g.fillStyle = radGlow;
+      g.fillRect(0, 0, expW, expH);
+
+      // 2. Futuristic Grid Lines
+      g.strokeStyle = 'rgba(255, 255, 255, 0.025)';
+      g.lineWidth = 2;
+      const step = 80;
+      for (let x = 0; x < expW; x += step) {
+        g.beginPath();
+        g.moveTo(x, 0);
+        g.lineTo(x, expH);
+        g.stroke();
+      }
+      for (let y = 0; y < expH; y += step) {
+        g.beginPath();
+        g.moveTo(0, y);
+        g.lineTo(expW, y);
+        g.stroke();
+      }
+
+      // 3. Faint Glowing Particles
+      for (let i = 0; i < 90; i++) {
+        const px = Math.random() * expW;
+        const py = Math.random() * expH;
+        const pr = Math.random() * 4 + 1;
+        g.fillStyle = 'rgba(0, 240, 255, ' + (Math.random() * 0.5 + 0.2) + ')';
+        g.shadowColor = '#00f0ff';
+        g.shadowBlur = 10;
+        g.beginPath();
+        g.arc(px, py, pr, 0, Math.PI * 2);
+        g.fill();
+      }
+      g.shadowBlur = 0;
+
+      // 4. Energy Ring Behind Countdown
+      const ringCenterX = expW / 2;
+      const ringCenterY = expH * 0.31;
+      const ringRadius = 480;
+
+      g.save();
+      g.strokeStyle = 'rgba(0, 240, 255, 0.35)';
+      g.lineWidth = 3;
+      g.shadowColor = '#00f0ff';
+      g.shadowBlur = 16;
+      g.beginPath();
+      g.arc(ringCenterX, ringCenterY, ringRadius, 0, Math.PI * 2);
+      g.stroke();
+
+      // Outer dashed circle
+      g.strokeStyle = 'rgba(120, 160, 255, 0.2)';
+      g.setLineDash([12, 18]);
+      g.beginPath();
+      g.arc(ringCenterX, ringCenterY, ringRadius + 30, 0, Math.PI * 2);
+      g.stroke();
+      g.setLineDash([]);
+      g.restore();
+
+      // 5. Header: FOCUS MODE Pill
+      const pillW = 420;
+      const pillH = 68;
+      const pillX = (expW - pillW) / 2;
+      const pillY = 240;
+
+      g.fillStyle = 'rgba(14, 25, 48, 0.75)';
+      g.strokeStyle = 'rgba(0, 240, 255, 0.4)';
+      g.lineWidth = 3;
+      roundRect(g, pillX, pillY, pillW, pillH, 34);
+      g.fill();
+      g.stroke();
+
+      // Pill dot & text
+      g.fillStyle = '#00f0ff';
+      g.beginPath();
+      g.arc(pillX + 45, pillY + pillH / 2, 7, 0, Math.PI * 2);
+      g.fill();
+
+      g.fillStyle = '#00f0ff';
+      g.font = 'bold 24px "Space Grotesk", sans-serif';
+      g.textAlign = 'center';
+      g.fillText('FOCUS MODE — ACTIVE', pillX + pillW / 2 + 10, pillY + 44);
+
+      // Header: MY DEADLINE
+      g.fillStyle = '#64748b';
+      g.font = 'bold 28px "Space Grotesk", sans-serif';
+      g.letterSpacing = '6px';
+      g.fillText('MY DEADLINE', expW / 2, pillY + 140);
+
+      // Header: NOVEMBER 23, 2026
+      g.fillStyle = '#ffffff';
+      g.font = '800 68px "Plus Jakarta Sans", sans-serif';
+      g.shadowColor = 'rgba(255, 255, 255, 0.3)';
+      g.shadowBlur = 20;
+      g.fillText(targetHeadingEl.textContent, expW / 2, pillY + 230);
+      g.shadowBlur = 0;
+
+      // 6. Countdown Digits
+      const cardW = 280;
+      const cardH = 240;
+      const gap = 30;
+      const totalGridW = 4 * cardW + 3 * gap;
+      const startX = (expW - totalGridW) / 2;
+      const startY = expH * 0.27;
+
+      const countdownData = [
+        { val: daysEl.textContent, label: 'DAYS' },
+        { val: hoursEl.textContent, label: 'HOURS' },
+        { val: minutesEl.textContent, label: 'MINUTES' },
+        { val: secondsEl.textContent, label: 'SECONDS' }
+      ];
+
+      countdownData.forEach((item, idx) => {
+        const cx = startX + idx * (cardW + gap);
+        const cy = startY;
+
+        // Card Glass Panel
+        g.fillStyle = 'rgba(16, 26, 50, 0.65)';
+        g.strokeStyle = 'rgba(140, 180, 255, 0.35)';
+        g.lineWidth = 3;
+        roundRect(g, cx, cy, cardW, cardH, 36);
+        g.fill();
+        g.stroke();
+
+        // Top rim highlight
+        g.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        g.lineWidth = 2;
+        g.beginPath();
+        g.moveTo(cx + 36, cy + 3);
+        g.lineTo(cx + cardW - 36, cy + 3);
+        g.stroke();
+
+        // Numerals
+        g.fillStyle = '#ffffff';
+        g.font = '800 100px "Space Grotesk", sans-serif';
+        g.textAlign = 'center';
+        g.shadowColor = 'rgba(0, 240, 255, 0.5)';
+        g.shadowBlur = 24;
+        g.fillText(item.val, cx + cardW / 2, cy + 135);
+        g.shadowBlur = 0;
+
+        // Label
+        g.fillStyle = '#94a3b8';
+        g.font = 'bold 24px "Space Grotesk", sans-serif';
+        g.fillText(item.label, cx + cardW / 2, cy + 195);
+      });
+
+      // 7. Mission Progress Card
+      const progCardW = 1200;
+      const progCardH = 220;
+      const progCardX = (expW - progCardW) / 2;
+      const progCardY = startY + cardH + 70;
+
+      g.fillStyle = 'rgba(16, 26, 50, 0.65)';
+      g.strokeStyle = 'rgba(120, 160, 255, 0.3)';
+      g.lineWidth = 3;
+      roundRect(g, progCardX, progCardY, progCardW, progCardH, 40);
+      g.fill();
+      g.stroke();
+
+      // Progress Header
+      g.textAlign = 'left';
+      g.fillStyle = '#e2e8f0';
+      g.font = 'bold 30px "Space Grotesk", sans-serif';
+      g.fillText('MISSION PROGRESS', progCardX + 50, progCardY + 65);
+
+      g.textAlign = 'right';
+      g.fillStyle = '#00f0ff';
+      g.font = 'bold 32px "JetBrains Mono", monospace';
+      g.fillText(`${progressPercent}% COMPLETE`, progCardX + progCardW - 50, progCardY + 65);
+
+      // Progress Bar Track
+      const trackX = progCardX + 50;
+      const trackY = progCardY + 95;
+      const trackW = progCardW - 100;
+      const trackH = 26;
+
+      g.fillStyle = 'rgba(10, 15, 28, 0.85)';
+      g.strokeStyle = 'rgba(120, 160, 255, 0.2)';
+      g.lineWidth = 2;
+      roundRect(g, trackX, trackY, trackW, trackH, 13);
+      g.fill();
+      g.stroke();
+
+      // Fill Bar
+      const fillW = trackW * (progressPercent / 100);
+      const barGrad = g.createLinearGradient(trackX, 0, trackX + fillW, 0);
+      barGrad.addColorStop(0, '#0284c7');
+      barGrad.addColorStop(1, '#00f0ff');
+      g.fillStyle = barGrad;
+      roundRect(g, trackX + 3, trackY + 3, fillW - 6, trackH - 6, 10);
+      g.fill();
+
+      // Sub-row
+      g.textAlign = 'left';
+      g.fillStyle = '#64748b';
+      g.font = '500 22px "JetBrains Mono", monospace';
+      g.fillText('ACTIVE PHASE: EXECUTION', trackX, progCardY + 175);
+
+      g.textAlign = 'right';
+      g.fillText(`${Math.round(progressPercent * 0.2)} / 20 CYCLES COMPLETED`, trackX + trackW, progCardY + 175);
+
+      // 8. Three Milestone Cards
+      const mileCardW = 1200;
+      const mileCardH = 150;
+      const mileGap = 26;
+      let mileY = progCardY + progCardH + 40;
+
+      const milestones = [
+        { id: '01', title: '01 — PLAN', desc: 'Break the deadline into achievable tasks.', status: 'ACHIEVED', color: '#38bdf8' },
+        { id: '02', title: '02 — BUILD', desc: 'Complete the project and prepare the final submission.', status: 'IN PROGRESS', color: '#00f0ff', active: true },
+        { id: '03', title: '03 — SUBMIT', desc: 'Review everything and submit before the deadline.', status: 'UPCOMING', color: '#94a3b8' }
+      ];
+
+      milestones.forEach((m) => {
+        g.fillStyle = m.active ? 'rgba(0, 240, 255, 0.08)' : 'rgba(13, 20, 38, 0.6)';
+        g.strokeStyle = m.active ? 'rgba(0, 240, 255, 0.5)' : 'rgba(120, 160, 255, 0.2)';
+        g.lineWidth = 3;
+        roundRect(g, progCardX, mileY, mileCardW, mileCardH, 30);
+        g.fill();
+        g.stroke();
+
+        // Index Icon box
+        g.fillStyle = m.active ? 'rgba(0, 240, 255, 0.25)' : 'rgba(255, 255, 255, 0.06)';
+        g.strokeStyle = m.active ? '#00f0ff' : 'rgba(255, 255, 255, 0.15)';
+        g.lineWidth = 2;
+        roundRect(g, progCardX + 30, mileY + 30, 90, 90, 22);
+        g.fill();
+        g.stroke();
+
+        g.textAlign = 'center';
+        g.fillStyle = m.color;
+        g.font = 'bold 34px "Space Grotesk", sans-serif';
+        g.fillText(m.id, progCardX + 75, mileY + 86);
+
+        // Titles
+        g.textAlign = 'left';
+        g.fillStyle = '#ffffff';
+        g.font = 'bold 32px "Space Grotesk", sans-serif';
+        g.fillText(m.title, progCardX + 150, mileY + 65);
+
+        g.fillStyle = '#94a3b8';
+        g.font = '500 24px "Plus Jakarta Sans", sans-serif';
+        g.fillText(m.desc, progCardX + 150, mileY + 105);
+
+        // Status Tag
+        g.textAlign = 'right';
+        g.fillStyle = m.color;
+        g.font = 'bold 22px "JetBrains Mono", monospace';
+        g.fillText(m.status, progCardX + mileCardW - 40, mileY + 65);
+
+        mileY += mileCardH + mileGap;
+      });
+
+      // 9. Indicators: Today's Priority & Next
+      mileY += 10;
+      const indW = (mileCardW - 24) / 2;
+      
+      // Box 1
+      g.fillStyle = 'rgba(10, 16, 32, 0.65)';
+      g.strokeStyle = 'rgba(120, 160, 255, 0.2)';
+      g.lineWidth = 2;
+      roundRect(g, progCardX, mileY, indW, 80, 20);
+      g.fill();
+      g.stroke();
+
+      g.textAlign = 'left';
+      g.fillStyle = '#00f0ff';
+      g.font = 'bold 22px "Space Grotesk", sans-serif';
+      g.fillText('TODAY\'S PRIORITY:', progCardX + 28, mileY + 48);
+      g.fillStyle = '#e2e8f0';
+      g.fillText(' Polish UI & Verify', progCardX + 230, mileY + 48);
+
+      // Box 2
+      roundRect(g, progCardX + indW + 24, mileY, indW, 80, 20);
+      g.fill();
+      g.stroke();
+      g.fillStyle = '#00f0ff';
+      g.fillText('NEXT MILESTONE →', progCardX + indW + 52, mileY + 48);
+      g.fillStyle = '#e2e8f0';
+      g.fillText(' 03 SUBMIT', progCardX + indW + 270, mileY + 48);
+
+      // 10. Motivation Section
+      mileY += 110;
+      const motCardH = 170;
+      g.fillStyle = 'rgba(14, 22, 44, 0.55)';
+      g.strokeStyle = 'rgba(0, 240, 255, 0.28)';
+      g.lineWidth = 2;
+      roundRect(g, progCardX, mileY, mileCardW, motCardH, 30);
+      g.fill();
+      g.stroke();
+
+      g.textAlign = 'center';
+      g.fillStyle = '#00f0ff';
+      g.font = '800 28px "Space Grotesk", sans-serif';
+      g.shadowColor = 'rgba(0, 240, 255, 0.4)';
+      g.shadowBlur = 14;
+      g.fillText('“ONE DEADLINE. ONE PLAN. ONE FINISH LINE.”', expW / 2, mileY + 70);
+      g.shadowBlur = 0;
+
+      g.fillStyle = '#94a3b8';
+      g.font = '500 24px "Plus Jakarta Sans", sans-serif';
+      g.fillText('Stay focused. Keep moving. Finish strong.', expW / 2, mileY + 118);
+
+      // Save to PNG File
+      const downloadLink = document.createElement('a');
+      downloadLink.download = '2026-Deadline-LockScreen-Wallpaper.png';
+      downloadLink.href = offscreen.toDataURL('image/png');
+      downloadLink.click();
+      showToast('Downloaded 9:16 High-Res Wallpaper (1440x3120)');
+    }
+
+    // Helper for canvas rounded rectangles
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    document.getElementById('export-wallpaper-btn').addEventListener('click', exportWallpaper);
+
+    // ============================================================
+    // DESKTOP MONITOR (16:9) CONTROLLER & 4K WALLPAPER EXPORTER
+    // ============================================================
+    const modePhoneBtn = document.getElementById('mode-phone-btn');
+    const modeMonitorBtn = document.getElementById('mode-monitor-btn');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const exportMonitorBtn = document.getElementById('export-monitor-wallpaper-btn');
+
+    function setDisplayMode(mode) {
+      if (mode === 'monitor') {
+        chassisWrapper.classList.add('mode-monitor');
+        chassisWrapper.classList.remove('with-phone');
+        modeMonitorBtn.classList.add('active');
+        modePhoneBtn.classList.remove('active');
+        document.getElementById('frame-label').textContent = 'Monitor: 16:9';
+        showToast('Switched to Desktop Monitor 16:9 Mode');
+      } else {
+        chassisWrapper.classList.remove('mode-monitor');
+        chassisWrapper.classList.add('with-phone');
+        modePhoneBtn.classList.add('active');
+        modeMonitorBtn.classList.remove('active');
+        document.getElementById('frame-label').textContent = 'Phone: 9:16';
+        showToast('Switched to Mobile Phone 9:16 Mode');
+      }
+      playFuturisticChime(560, 0.1);
+      setTimeout(resizeCanvas, 200);
+      refreshBounds();
+    }
+
+    modePhoneBtn.addEventListener('click', () => setDisplayMode('phone'));
+    modeMonitorBtn.addEventListener('click', () => setDisplayMode('monitor'));
+
+    fullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().then(() => {
+          document.body.classList.add('is-fullscreen');
+          showToast('Entered Fullscreen Display');
+        }).catch(err => {
+          document.body.classList.toggle('is-fullscreen');
+        });
+      } else {
+        document.exitFullscreen().then(() => {
+          document.body.classList.remove('is-fullscreen');
+          showToast('Exited Fullscreen');
+        });
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        document.body.classList.remove('is-fullscreen');
+      } else {
+        document.body.classList.add('is-fullscreen');
+      }
+      setTimeout(resizeCanvas, 200);
+    });
+
+    // 4K 16:9 Desktop Monitor Wallpaper Exporter (3840×2160)
+    function exportDesktopWallpaper() {
+      showToast('Generating 16:9 4K Monitor Wallpaper (3840×2160)...');
+      playFuturisticChime(950, 0.2);
+
+      const expW = 3840;
+      const expH = 2160;
+      const offscreen = document.createElement('canvas');
+      offscreen.width = expW;
+      offscreen.height = expH;
+      const g = offscreen.getContext('2d');
+
+      // 1. Deep Space Luxury Gradient
+      const bgGrad = g.createLinearGradient(0, 0, expW, expH);
+      bgGrad.addColorStop(0, '#03050c');
+      bgGrad.addColorStop(0.25, '#080e22');
+      bgGrad.addColorStop(0.5, '#050817');
+      bgGrad.addColorStop(0.75, '#091026');
+      bgGrad.addColorStop(1, '#020308');
+      g.fillStyle = bgGrad;
+      g.fillRect(0, 0, expW, expH);
+
+      // 2. Atmospheric Radial Glows
+      const radCenter = g.createRadialGradient(expW / 2, expH * 0.48, 40, expW / 2, expH * 0.48, 800);
+      radCenter.addColorStop(0, 'rgba(0, 240, 255, 0.22)');
+      radCenter.addColorStop(0.45, 'rgba(30, 58, 138, 0.12)');
+      radCenter.addColorStop(1, 'transparent');
+      g.fillStyle = radCenter;
+      g.fillRect(0, 0, expW, expH);
+
+      // 3. Grid Lines
+      g.strokeStyle = 'rgba(255, 255, 255, 0.025)';
+      g.lineWidth = 1.5;
+      const step = 80;
+      for (let x = 0; x < expW; x += step) {
+        g.beginPath();
+        g.moveTo(x, 0);
+        g.lineTo(x, expH);
+        g.stroke();
+      }
+      for (let y = 0; y < expH; y += step) {
+        g.beginPath();
+        g.moveTo(0, y);
+        g.lineTo(expW, y);
+        g.stroke();
+      }
+
+      // 4. Floating Micro Particles
+      for (let i = 0; i < 110; i++) {
+        const px = Math.random() * expW;
+        const py = Math.random() * expH;
+        const pr = Math.random() * 4 + 1;
+        g.fillStyle = 'rgba(0, 240, 255, ' + (Math.random() * 0.5 + 0.25) + ')';
+        g.shadowColor = '#00f0ff';
+        g.shadowBlur = 10;
+        g.beginPath();
+        g.arc(px, py, pr, 0, Math.PI * 2);
+        g.fill();
+      }
+      g.shadowBlur = 0;
+
+      // 5. Massive Rotating Energy Rings Behind Central Countdown
+      const ringX = expW / 2;
+      const ringY = expH * 0.5;
+      const ringR = 580;
+
+      g.save();
+      g.strokeStyle = 'rgba(0, 240, 255, 0.35)';
+      g.lineWidth = 4;
+      g.shadowColor = '#00f0ff';
+      g.shadowBlur = 18;
+      g.beginPath();
+      g.arc(ringX, ringY, ringR, 0, Math.PI * 2);
+      g.stroke();
+
+      g.strokeStyle = 'rgba(120, 160, 255, 0.18)';
+      g.setLineDash([12, 20]);
+      g.beginPath();
+      g.arc(ringX, ringY, ringR + 40, 0, Math.PI * 2);
+      g.stroke();
+      g.setLineDash([]);
+      g.restore();
+
+      // 6. Top Header Ribbon
+      g.fillStyle = 'rgba(14, 25, 48, 0.75)';
+      g.strokeStyle = 'rgba(0, 240, 255, 0.4)';
+      g.lineWidth = 2.5;
+      roundRect(g, 160, 90, 420, 64, 32);
+      g.fill();
+      g.stroke();
+      g.fillStyle = '#00f0ff';
+      g.beginPath();
+      g.arc(195, 122, 6, 0, Math.PI * 2);
+      g.fill();
+      g.font = 'bold 20px "JetBrains Mono", monospace';
+      g.textAlign = 'left';
+      g.fillText('CHRONOS // DESKTOP HUD', 215, 128);
+
+      // Focus Pill in Center Top
+      roundRect(g, (expW - 420) / 2, 90, 420, 64, 32);
+      g.fill();
+      g.stroke();
+      g.fillStyle = '#00f0ff';
+      g.beginPath();
+      g.arc((expW - 420) / 2 + 35, 122, 6, 0, Math.PI * 2);
+      g.fill();
+      g.font = 'bold 20px "Space Grotesk", sans-serif';
+      g.textAlign = 'center';
+      g.fillText('FOCUS MODE — ACTIVE', expW / 2 + 10, 129);
+
+      // Right: Target Date
+      g.textAlign = 'right';
+      g.fillStyle = '#ffffff';
+      g.font = 'bold 26px "Space Grotesk", sans-serif';
+      g.fillText('NOVEMBER 23, 2026 // 23:59 PT', expW - 160, 132);
+
+      // 7. CENTER STAGE: 3D COUNTDOWN
+      g.textAlign = 'center';
+      g.fillStyle = '#64748b';
+      g.font = 'bold 30px "Space Grotesk", sans-serif';
+      g.letterSpacing = '8px';
+      g.fillText('MY DEADLINE', ringX, ringY - 240);
+
+      g.fillStyle = '#ffffff';
+      g.font = '800 84px "Plus Jakarta Sans", sans-serif';
+      g.shadowColor = 'rgba(255, 255, 255, 0.3)';
+      g.shadowBlur = 24;
+      g.fillText(targetHeadingEl.textContent, ringX, ringY - 140);
+      g.shadowBlur = 0;
+
+      // 4 Giant Numerals
+      const cardW = 320;
+      const cardH = 280;
+      const gap = 36;
+      const totalGridW = 4 * cardW + 3 * gap;
+      const startX = (expW - totalGridW) / 2;
+      const startY = ringY - 30;
+
+      const countdownData = [
+        { val: daysEl.textContent, label: 'DAYS' },
+        { val: hoursEl.textContent, label: 'HOURS' },
+        { val: minutesEl.textContent, label: 'MINUTES' },
+        { val: secondsEl.textContent, label: 'SECONDS' }
+      ];
+
+      countdownData.forEach((item, idx) => {
+        const cx = startX + idx * (cardW + gap);
+        const cy = startY;
+
+        g.fillStyle = 'rgba(16, 26, 50, 0.7)';
+        g.strokeStyle = idx === 3 ? '#00f0ff' : 'rgba(140, 180, 255, 0.35)';
+        g.lineWidth = idx === 3 ? 3.5 : 2.5;
+        roundRect(g, cx, cy, cardW, cardH, 38);
+        g.fill();
+        g.stroke();
+
+        g.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        g.lineWidth = 2;
+        g.beginPath();
+        g.moveTo(cx + 40, cy + 3);
+        g.lineTo(cx + cardW - 40, cy + 3);
+        g.stroke();
+
+        g.fillStyle = '#ffffff';
+        g.font = '800 120px "Space Grotesk", sans-serif';
+        g.textAlign = 'center';
+        g.shadowColor = 'rgba(0, 240, 255, 0.5)';
+        g.shadowBlur = 22;
+        g.fillText(item.val, cx + cardW / 2, cy + 160);
+        g.shadowBlur = 0;
+
+        g.fillStyle = idx === 3 ? '#00f0ff' : '#94a3b8';
+        g.font = 'bold 24px "Space Grotesk", sans-serif';
+        g.fillText(item.label, cx + cardW / 2, cy + 230);
+      });
+
+      // 8. LEFT WING (x=160, w=980): MISSION PROGRESS & MOTIVATION
+      const leftX = 160;
+      const leftY = 280;
+      const leftW = 980;
+
+      // Progress Card
+      g.fillStyle = 'rgba(16, 26, 50, 0.65)';
+      g.strokeStyle = 'rgba(120, 160, 255, 0.3)';
+      g.lineWidth = 2.5;
+      roundRect(g, leftX, leftY, leftW, 360, 36);
+      g.fill();
+      g.stroke();
+
+      g.textAlign = 'left';
+      g.fillStyle = '#e2e8f0';
+      g.font = 'bold 28px "Space Grotesk", sans-serif';
+      g.fillText('MISSION PROGRESS', leftX + 48, leftY + 68);
+
+      g.textAlign = 'right';
+      g.fillStyle = '#00f0ff';
+      g.font = 'bold 36px "JetBrains Mono", monospace';
+      g.fillText(`${progressPercent}% COMPLETE`, leftX + leftW - 48, leftY + 68);
+
+      // Track
+      const trkX = leftX + 48;
+      const trkY = leftY + 120;
+      const trkW = leftW - 96;
+      const trkH = 32;
+      g.fillStyle = 'rgba(8, 14, 26, 0.9)';
+      g.strokeStyle = 'rgba(120, 160, 255, 0.22)';
+      g.lineWidth = 2;
+      roundRect(g, trkX, trkY, trkW, trkH, 16);
+      g.fill();
+      g.stroke();
+
+      const fW = trkW * (progressPercent / 100);
+      const bGrad = g.createLinearGradient(trkX, 0, trkX + fW, 0);
+      bGrad.addColorStop(0, '#0284c7');
+      bGrad.addColorStop(1, '#00f0ff');
+      g.fillStyle = bGrad;
+      roundRect(g, trkX + 4, trkY + 4, fW - 8, trkH - 8, 12);
+      g.fill();
+
+      g.textAlign = 'left';
+      g.fillStyle = '#64748b';
+      g.font = '600 20px "JetBrains Mono", monospace';
+      g.fillText('ACTIVE PHASE: 02 BUILD', trkX, leftY + 205);
+      g.textAlign = 'right';
+      g.fillText(`${Math.round(progressPercent * 0.2)} / 20 CYCLES COMPLETED`, trkX + trkW, leftY + 205);
+
+      // Badges
+      const bY = leftY + 250;
+      const bW = (leftW - 136) / 3;
+      ['VELOCITY: 4.8x', 'BUFFER: 2H 59M', 'BLOCKERS: 0'].forEach((txt, bIdx) => {
+        const bx = leftX + 48 + bIdx * (bW + 20);
+        g.fillStyle = 'rgba(10, 16, 32, 0.7)';
+        g.strokeStyle = 'rgba(0, 240, 255, 0.2)';
+        g.lineWidth = 1.5;
+        roundRect(g, bx, bY, bW, 54, 14);
+        g.fill();
+        g.stroke();
+        g.textAlign = 'center';
+        g.fillStyle = bIdx === 0 ? '#38bdf8' : bIdx === 1 ? '#00f0ff' : '#a7f3d0';
+        g.font = 'bold 18px "JetBrains Mono", monospace';
+        g.fillText(txt, bx + bW / 2, bY + 34);
+      });
+
+      // Priority Box
+      const pY = leftY + 400;
+      roundRect(g, leftX, pY, leftW, 230, 32);
+      g.fillStyle = 'rgba(16, 26, 50, 0.65)';
+      g.strokeStyle = 'rgba(120, 160, 255, 0.22)';
+      g.lineWidth = 2;
+      g.fill();
+      g.stroke();
+      g.textAlign = 'left';
+      g.fillStyle = '#00f0ff';
+      g.font = 'bold 24px "Space Grotesk", sans-serif';
+      g.fillText('TODAY\'S PRIORITY', leftX + 48, pY + 65);
+      g.fillStyle = '#ffffff';
+      g.font = 'bold 30px "Space Grotesk", sans-serif';
+      g.fillText('Polish UI & Finalize Core Architecture', leftX + 48, pY + 125);
+      g.fillStyle = '#94a3b8';
+      g.font = '500 22px "Plus Jakarta Sans", sans-serif';
+      g.fillText('Execute verification checklist prior to 03 SUBMIT gateway review.', leftX + 48, pY + 175);
+
+      // Motivational Box
+      const mY = pY + 270;
+      roundRect(g, leftX, mY, leftW, 200, 32);
+      g.fillStyle = 'rgba(16, 26, 50, 0.65)';
+      g.strokeStyle = 'rgba(0, 240, 255, 0.32)';
+      g.lineWidth = 2;
+      g.fill();
+      g.stroke();
+      g.textAlign = 'center';
+      g.fillStyle = '#00f0ff';
+      g.font = '800 28px "Space Grotesk", sans-serif';
+      g.fillText('“ONE DEADLINE. ONE PLAN. ONE FINISH LINE.”', leftX + leftW / 2, mY + 80);
+      g.fillStyle = '#cbd5e1';
+      g.font = '500 24px "Plus Jakarta Sans", sans-serif';
+      g.fillText('Stay focused. Keep moving. Finish strong.', leftX + leftW / 2, mY + 140);
+
+      // 9. RIGHT WING (x=2700, w=980): 6-STAGE TIMELINE HUD & MILESTONES
+      const rX = 2700;
+      const rY = 280;
+      const rW = 980;
+
+      // 6-Stage Timeline Box
+      roundRect(g, rX, rY, rW, 250, 32);
+      g.fillStyle = 'rgba(16, 26, 50, 0.65)';
+      g.strokeStyle = 'rgba(0, 240, 255, 0.3)';
+      g.lineWidth = 2;
+      g.fill();
+      g.stroke();
+
+      g.textAlign = 'left';
+      g.fillStyle = '#00f0ff';
+      g.font = 'bold 22px "JetBrains Mono", monospace';
+      g.fillText('6-STAGE BACKWARD TIMELINE', rX + 40, rY + 54);
+      g.textAlign = 'right';
+      g.fillStyle = '#94a3b8';
+      g.font = '600 18px "JetBrains Mono", monospace';
+      g.fillText('GATEWAY: 9:00 PM PT', rX + rW - 40, rY + 54);
+
+      // Timeline Nodes
+      const tY = rY + 120;
+      const nodes = [
+        { label: 'GOAL', done: true },
+        { label: 'PREP', done: true },
+        { label: 'BUILD', done: true },
+        { label: 'TEST', active: true },
+        { label: 'REVIEW', upcoming: true },
+        { label: 'SUBMIT', target: true }
+      ];
+      const nodeStep = (rW - 120) / (nodes.length - 1);
+      g.strokeStyle = 'rgba(120, 160, 255, 0.3)';
+      g.lineWidth = 3;
+      g.beginPath();
+      g.moveTo(rX + 60, tY);
+      g.lineTo(rX + rW - 60, tY);
+      g.stroke();
+
+      nodes.forEach((nd, nIdx) => {
+        const nx = rX + 60 + nIdx * nodeStep;
+        g.fillStyle = nd.active ? '#00f0ff' : nd.done ? '#0284c7' : nd.target ? '#881337' : '#0f172a';
+        g.strokeStyle = nd.active ? '#ffffff' : nd.done ? '#38bdf8' : nd.target ? '#f43f5e' : '#64748b';
+        g.lineWidth = 2.5;
+        g.beginPath();
+        g.arc(nx, tY, nd.active ? 20 : 16, 0, Math.PI * 2);
+        g.fill();
+        g.stroke();
+
+        g.textAlign = 'center';
+        g.fillStyle = nd.active ? '#00f0ff' : nd.done ? '#38bdf8' : nd.target ? '#f43f5e' : '#94a3b8';
+        g.font = 'bold 15px "JetBrains Mono", monospace';
+        g.fillText(nd.label, nx, tY + 42);
+      });
+
+      // 3 Milestone Cards
+      let mTileY = rY + 290;
+      const mTiles = [
+        { id: '01', title: '01 — PLAN', desc: 'Break the deadline into achievable tasks.', status: 'ACHIEVED', color: '#38bdf8' },
+        { id: '02', title: '02 — BUILD', desc: 'Complete the project and prepare the final submission.', status: 'IN PROGRESS', color: '#00f0ff', active: true },
+        { id: '03', title: '03 — SUBMIT', desc: 'Review everything and submit before the deadline.', status: 'UPCOMING', color: '#94a3b8' }
+      ];
+
+      mTiles.forEach((mt) => {
+        roundRect(g, rX, mTileY, rW, 160, 28);
+        g.fillStyle = mt.active ? 'rgba(16, 26, 52, 0.8)' : 'rgba(13, 20, 38, 0.65)';
+        g.strokeStyle = mt.active ? '#00f0ff' : 'rgba(120, 160, 255, 0.2)';
+        g.lineWidth = mt.active ? 3 : 2;
+        g.fill();
+        g.stroke();
+
+        roundRect(g, rX + 30, mTileY + 35, 90, 90, 22);
+        g.fillStyle = mt.active ? 'rgba(0, 240, 255, 0.25)' : 'rgba(255, 255, 255, 0.06)';
+        g.strokeStyle = mt.active ? '#00f0ff' : 'rgba(255, 255, 255, 0.15)';
+        g.lineWidth = 2;
+        g.fill();
+        g.stroke();
+
+        g.textAlign = 'center';
+        g.fillStyle = mt.color;
+        g.font = 'bold 36px "Space Grotesk", sans-serif';
+        g.fillText(mt.id, rX + 75, mTileY + 92);
+
+        g.textAlign = 'left';
+        g.fillStyle = '#ffffff';
+        g.font = 'bold 30px "Space Grotesk", sans-serif';
+        g.fillText(mt.title, rX + 145, mTileY + 70);
+
+        g.fillStyle = '#94a3b8';
+        g.font = '500 22px "Plus Jakarta Sans", sans-serif';
+        g.fillText(mt.desc, rX + 145, mTileY + 112);
+
+        g.textAlign = 'right';
+        g.fillStyle = mt.color;
+        g.font = 'bold 20px "JetBrains Mono", monospace';
+        g.fillText(mt.status, rX + rW - 35, mTileY + 70);
+
+        mTileY += 185;
+      });
+
+      // Save to File
+      const downloadLink = document.createElement('a');
+      downloadLink.download = '2026-Deadline-Monitor-Wallpaper-4K.png';
+      downloadLink.href = offscreen.toDataURL('image/png');
+      downloadLink.click();
+      showToast('Downloaded 16:9 4K UHD Desktop Wallpaper (3840×2160)');
+    }
+
+    exportMonitorBtn.addEventListener('click', exportDesktopWallpaper);
+
+    // Keyboard shortcut M for Monitor/Phone toggle, F for fullscreen
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'm' || e.key === 'M') {
+        const isMon = chassisWrapper.classList.contains('mode-monitor');
+        setDisplayMode(isMon ? 'phone' : 'monitor');
+      } else if (e.key === 'f' || e.key === 'F') {
+        fullscreenBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>

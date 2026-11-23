@@ -1,0 +1,472 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160" width="3840" height="2160">
+  <defs>
+    <!-- Deep Space Luxury Gradients -->
+    <linearGradient id="mBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#03050c" />
+      <stop offset="25%" stop-color="#080e22" />
+      <stop offset="50%" stop-color="#050817" />
+      <stop offset="75%" stop-color="#091026" />
+      <stop offset="100%" stop-color="#020308" />
+    </linearGradient>
+
+    <!-- Volumetric Cyan Atmospheric Glow (Center Countdown) -->
+    <radialGradient id="mCyanGlowCenter" cx="50%" cy="48%" r="40%">
+      <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.22" />
+      <stop offset="45%" stop-color="#1e3a8a" stop-opacity="0.12" />
+      <stop offset="85%" stop-color="#080e22" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Side Atmospheric Highlights -->
+    <radialGradient id="mSideGlowLeft" cx="15%" cy="50%" r="35%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.12" />
+      <stop offset="70%" stop-color="transparent" />
+    </radialGradient>
+
+    <radialGradient id="mSideGlowRight" cx="85%" cy="50%" r="35%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.12" />
+      <stop offset="70%" stop-color="transparent" />
+    </radialGradient>
+
+    <!-- Glass Surface Gradient -->
+    <linearGradient id="mGlassCardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e2942" stop-opacity="0.65" />
+      <stop offset="50%" stop-color="#111827" stop-opacity="0.75" />
+      <stop offset="100%" stop-color="#090e1c" stop-opacity="0.85" />
+    </linearGradient>
+
+    <!-- Glass Rim Highlight -->
+    <linearGradient id="mGlassRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45" />
+      <stop offset="30%" stop-color="#00f0ff" stop-opacity="0.3" />
+      <stop offset="70%" stop-color="#3b82f6" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.05" />
+    </linearGradient>
+
+    <!-- Active Neon Border Gradient -->
+    <linearGradient id="mActiveNeonBorder" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.85" />
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#00f0ff" stop-opacity="0.85" />
+    </linearGradient>
+
+    <!-- Titanium Text Gradient -->
+    <linearGradient id="mTextTitanium" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="65%" stop-color="#e2e8f0" />
+      <stop offset="100%" stop-color="#94a3b8" />
+    </linearGradient>
+
+    <!-- Progress Bar Gradient -->
+    <linearGradient id="mProgressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="60%" stop-color="#0ea5e9" />
+      <stop offset="100%" stop-color="#00f0ff" />
+    </linearGradient>
+
+    <!-- Glow Filters -->
+    <filter id="mNeonGlowCyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="mSubtleGlow" x="-15%" y="-15%" width="130%" height="130%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="mCardShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#000000" flood-opacity="0.8" />
+    </filter>
+
+    <!-- Coordinate Grid Pattern -->
+    <pattern id="mMonitorGrid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(255, 255, 255, 0.025)" stroke-width="1.2" />
+    </pattern>
+  </defs>
+
+  <style>
+    .font-sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Plus Jakarta Sans", sans-serif; }
+    .font-mono { font-family: "JetBrains Mono", "SF Mono", monospace; }
+  </style>
+
+  <!-- 1. Background Fill -->
+  <rect width="3840" height="2160" fill="url(#mBgGrad)" />
+
+  <!-- 2. Atmospheric Volumetric Blooms -->
+  <rect width="3840" height="2160" fill="url(#mCyanGlowCenter)" />
+  <rect width="3840" height="2160" fill="url(#mSideGlowLeft)" />
+  <rect width="3840" height="2160" fill="url(#mSideGlowRight)" />
+
+  <!-- 3. Coordinate Grid Overlay -->
+  <rect width="3840" height="2160" fill="url(#mMonitorGrid)" />
+
+  <!-- 4. Floating Micro-Particles (Ambient Cosmic Dust) -->
+  <g opacity="0.8">
+    <circle cx="340" cy="280" r="3" fill="#00f0ff" opacity="0.6" filter="url(#mSubtleGlow)" />
+    <circle cx="890" cy="410" r="2.5" fill="#38bdf8" opacity="0.5" />
+    <circle cx="1450" cy="220" r="3.5" fill="#00f0ff" opacity="0.7" filter="url(#mSubtleGlow)" />
+    <circle cx="2380" cy="310" r="2" fill="#38bdf8" opacity="0.4" />
+    <circle cx="3120" cy="250" r="3" fill="#00f0ff" opacity="0.6" filter="url(#mSubtleGlow)" />
+    <circle cx="3560" cy="520" r="2.5" fill="#38bdf8" opacity="0.5" />
+    <circle cx="480" cy="1120" r="3" fill="#00f0ff" opacity="0.5" />
+    <circle cx="1200" cy="1380" r="2.5" fill="#38bdf8" opacity="0.4" />
+    <circle cx="2650" cy="1420" r="3.5" fill="#00f0ff" opacity="0.6" filter="url(#mSubtleGlow)" />
+    <circle cx="3420" cy="1280" r="2" fill="#38bdf8" opacity="0.5" />
+    <circle cx="560" cy="1890" r="3.5" fill="#00f0ff" opacity="0.6" filter="url(#mSubtleGlow)" />
+    <circle cx="1620" cy="1950" r="2.5" fill="#38bdf8" opacity="0.5" />
+    <circle cx="2950" cy="1880" r="3" fill="#00f0ff" opacity="0.7" />
+  </g>
+
+  <!-- 5. Massive Rotating Holographic Energy Rings Behind Central Countdown -->
+  <g transform="translate(1920, 1080)">
+    <!-- Outer dashed energy circle -->
+    <circle cx="0" cy="0" r="620" fill="none" stroke="rgba(120, 160, 255, 0.16)" stroke-width="2.5" stroke-dasharray="8 18" />
+    
+    <!-- Primary energy ring with cyan bloom -->
+    <circle cx="0" cy="0" r="580" fill="none" stroke="rgba(0, 240, 255, 0.35)" stroke-width="3.5" filter="url(#mNeonGlowCyan)" />
+    <circle cx="0" cy="0" r="580" fill="none" stroke="rgba(255, 255, 255, 0.7)" stroke-width="1.2" />
+
+    <!-- Inner telemetry circle -->
+    <circle cx="0" cy="0" r="540" fill="none" stroke="rgba(120, 160, 255, 0.12)" stroke-width="2" />
+
+    <!-- Cyan Accent Arcs -->
+    <path d="M 0 -580 A 580 580 0 0 1 580 0" fill="none" stroke="#00f0ff" stroke-width="6" stroke-linecap="round" filter="url(#mNeonGlowCyan)" />
+    <path d="M 0 580 A 580 580 0 0 1 -580 0" fill="none" stroke="#38bdf8" stroke-width="4.5" stroke-linecap="round" />
+
+    <!-- Orbital Satellite Nodes -->
+    <circle cx="580" cy="0" r="8" fill="#00f0ff" filter="url(#mNeonGlowCyan)" />
+    <circle cx="-580" cy="0" r="7" fill="#ffffff" filter="url(#mSubtleGlow)" />
+    <circle cx="0" cy="-580" r="7" fill="#00f0ff" filter="url(#mNeonGlowCyan)" />
+    <circle cx="0" cy="580" r="6" fill="#38bdf8" />
+  </g>
+
+  <!-- 6. Top Global Header Bar -->
+  <g transform="translate(160, 100)">
+    <!-- Left: CHRONOS System telemetry -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="360" height="64" rx="32" fill="rgba(14, 25, 48, 0.65)" stroke="rgba(0, 240, 255, 0.35)" stroke-width="1.5" />
+      <circle cx="36" cy="32" r="6" fill="#00f0ff" filter="url(#mNeonGlowCyan)" />
+      <text x="56" y="39" fill="#00f0ff" font-size="19" font-weight="800" class="font-mono" letter-spacing="2">CHRONOS // DESKTOP HUD</text>
+    </g>
+
+    <!-- Center: Focus Mode Indicator -->
+    <g transform="translate(1560, 0)">
+      <rect x="0" y="0" width="400" height="64" rx="32" fill="rgba(14, 25, 48, 0.75)" stroke="rgba(0, 240, 255, 0.38)" stroke-width="2" filter="url(#mCardShadow)" />
+      <circle cx="42" cy="32" r="7" fill="#00f0ff" filter="url(#mNeonGlowCyan)" />
+      <text x="215" y="41" fill="#00f0ff" font-size="20" font-weight="700" text-anchor="middle" class="font-sans" letter-spacing="3.5">FOCUS MODE — ACTIVE</text>
+    </g>
+
+    <!-- Right: High Precision Clock & Status -->
+    <g transform="translate(3160, 0)">
+      <text x="360" y="44" fill="#ffffff" font-size="28" font-weight="700" text-anchor="end" class="font-sans" letter-spacing="1">NOVEMBER 23, 2026 // 23:59 PT</text>
+    </g>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- 7. LEFT WING: MISSION PROGRESS & ACTIVE SPRINT INDICATORS   -->
+  <!-- ============================================================ -->
+  <g transform="translate(160, 280)">
+    
+    <!-- Card 1: 3D Mission Progress Card -->
+    <g transform="translate(0, 0)" filter="url(#mCardShadow)">
+      <rect x="0" y="0" width="980" height="380" rx="36" fill="url(#mGlassCardGrad)" stroke="url(#mGlassRimGrad)" stroke-width="2.5" />
+      <line x1="36" y1="2" x2="944" y2="2" stroke="rgba(0, 240, 255, 0.5)" stroke-width="2" stroke-linecap="round" />
+
+      <!-- Header Row -->
+      <g transform="translate(48, 56)">
+        <circle cx="18" cy="18" r="16" fill="none" stroke="#00f0ff" stroke-width="3" />
+        <circle cx="18" cy="18" r="6" fill="#00f0ff" />
+        <line x1="18" y1="0" x2="18" y2="7" stroke="#00f0ff" stroke-width="3" />
+        <line x1="18" y1="29" x2="18" y2="36" stroke="#00f0ff" stroke-width="3" />
+        <line x1="0" y1="18" x2="7" y2="18" stroke="#00f0ff" stroke-width="3" />
+        <line x1="29" y1="18" x2="36" y2="18" stroke="#00f0ff" stroke-width="3" />
+
+        <text x="56" y="27" fill="#e2e8f0" font-size="28" font-weight="800" class="font-sans" letter-spacing="4">MISSION PROGRESS</text>
+      </g>
+
+      <text x="932" y="85" fill="#00f0ff" font-size="38" font-weight="800" text-anchor="end" class="font-mono" filter="url(#mSubtleGlow)">80% COMPLETE</text>
+
+      <!-- Segmented Cyber Progress Track -->
+      <g transform="translate(48, 140)">
+        <rect x="0" y="0" width="884" height="34" rx="17" fill="rgba(8, 14, 26, 0.9)" stroke="rgba(120, 160, 255, 0.22)" stroke-width="2" />
+        <rect x="5" y="5" width="702" height="24" rx="12" fill="url(#mProgressGrad)" filter="url(#mSubtleGlow)" />
+        
+        <!-- Division notches -->
+        <g stroke="rgba(4, 8, 16, 0.75)" stroke-width="2">
+          <line x1="88" y1="5" x2="88" y2="29" />
+          <line x1="176" y1="5" x2="176" y2="29" />
+          <line x1="264" y1="5" x2="264" y2="29" />
+          <line x1="352" y1="5" x2="352" y2="29" />
+          <line x1="440" y1="5" x2="440" y2="29" />
+          <line x1="528" y1="5" x2="528" y2="29" />
+          <line x1="616" y1="5" x2="616" y2="29" />
+          <line x1="704" y1="5" x2="704" y2="29" />
+        </g>
+      </g>
+
+      <text x="48" y="240" fill="#64748b" font-size="22" font-weight="600" class="font-mono">CURRENT SPRINT: 03 MAIN EXECUTION</text>
+      <text x="932" y="240" fill="#94a3b8" font-size="22" font-weight="600" text-anchor="end" class="font-mono">16 / 20 MILESTONE CYCLES DONE</text>
+
+      <!-- Sub metric badges -->
+      <g transform="translate(48, 280)">
+        <rect x="0" y="0" width="280" height="56" rx="14" fill="rgba(10, 16, 32, 0.7)" stroke="rgba(0, 240, 255, 0.2)" stroke-width="1.5" />
+        <text x="140" y="35" fill="#38bdf8" font-size="18" font-weight="700" text-anchor="middle" class="font-mono">VELOCITY: 4.8x</text>
+
+        <rect x="302" y="0" width="280" height="56" rx="14" fill="rgba(10, 16, 32, 0.7)" stroke="rgba(0, 240, 255, 0.2)" stroke-width="1.5" />
+        <text x="442" y="35" fill="#00f0ff" font-size="18" font-weight="700" text-anchor="middle" class="font-mono">BUFFER: 2H 59M</text>
+
+        <rect x="604" y="0" width="280" height="56" rx="14" fill="rgba(10, 16, 32, 0.7)" stroke="rgba(0, 240, 255, 0.2)" stroke-width="1.5" />
+        <text x="744" y="35" fill="#a7f3d0" font-size="18" font-weight="700" text-anchor="middle" class="font-mono">BLOCKERS: 0</text>
+      </g>
+    </g>
+
+    <!-- Card 2: Today's Priority & Tactical Focus -->
+    <g transform="translate(0, 420)" filter="url(#mCardShadow)">
+      <rect x="0" y="0" width="980" height="240" rx="32" fill="url(#mGlassCardGrad)" stroke="rgba(120, 160, 255, 0.22)" stroke-width="2" />
+      
+      <!-- Icon & Header -->
+      <circle cx="68" cy="65" r="22" fill="rgba(0, 240, 255, 0.15)" stroke="#00f0ff" stroke-width="2.5" />
+      <polyline points="68,52 68,65 78,71" fill="none" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round" />
+      <text x="110" y="74" fill="#00f0ff" font-size="26" font-weight="800" class="font-sans" letter-spacing="3">TODAY'S PRIORITY</text>
+
+      <text x="50" y="145" fill="#ffffff" font-size="32" font-weight="700" class="font-sans">Polish UI &amp; Finalize Core Architecture</text>
+      <text x="50" y="195" fill="#94a3b8" font-size="22" font-weight="500" class="font-sans">Execute verification checklist prior to 03 SUBMIT gateway review.</text>
+    </g>
+
+    <!-- Card 3: Motivational Doctrine -->
+    <g transform="translate(0, 700)" filter="url(#mCardShadow)">
+      <rect x="0" y="0" width="980" height="220" rx="32" fill="url(#mGlassCardGrad)" stroke="rgba(0, 240, 255, 0.32)" stroke-width="2" />
+      <line x1="40" y1="2" x2="940" y2="2" stroke="url(#mActiveNeonBorder)" stroke-width="2" stroke-linecap="round" filter="url(#mSubtleGlow)" />
+
+      <text x="490" y="90" fill="#00f0ff" font-size="30" font-weight="800" text-anchor="middle" class="font-sans" letter-spacing="3" filter="url(#mSubtleGlow)">
+        “ONE DEADLINE. ONE PLAN. ONE FINISH LINE.”
+      </text>
+      <text x="490" y="150" fill="#cbd5e1" font-size="24" font-weight="500" text-anchor="middle" class="font-sans">
+        Stay focused. Keep moving. Finish strong.
+      </text>
+    </g>
+
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- 8. CENTER STAGE: MONUMENTAL 3D FLOATING COUNTDOWN DISPLAY    -->
+  <!-- ============================================================ -->
+  <g transform="translate(1920, 680)">
+    <!-- Header: MY DEADLINE -->
+    <text x="0" y="0" fill="#64748b" font-size="32" font-weight="700" text-anchor="middle" class="font-sans" letter-spacing="10">MY DEADLINE</text>
+    
+    <!-- Architectural Monumental Date -->
+    <text x="0" y="95" fill="url(#mTextTitanium)" font-size="88" font-weight="800" text-anchor="middle" class="font-sans" letter-spacing="-1">NOVEMBER 23, 2026</text>
+    <line x1="-240" y1="130" x2="240" y2="130" stroke="rgba(0, 240, 255, 0.5)" stroke-width="2.5" stroke-linecap="round" filter="url(#mSubtleGlow)" />
+
+    <!-- 4 Monumental 3D Glass Countdown Numerals -->
+    <g transform="translate(-700, 200)">
+      
+      <!-- Card 1: DAYS -->
+      <g transform="translate(0, 0)" filter="url(#mCardShadow)">
+        <rect x="0" y="0" width="320" height="290" rx="38" fill="url(#mGlassCardGrad)" stroke="url(#mGlassRimGrad)" stroke-width="3" />
+        <line x1="40" y1="3" x2="280" y2="3" stroke="rgba(255, 255, 255, 0.6)" stroke-width="2" stroke-linecap="round" />
+        <text x="160" y="165" fill="#ffffff" font-size="124" font-weight="800" text-anchor="middle" class="font-sans" filter="url(#mSubtleGlow)" letter-spacing="-3">00</text>
+        <text x="160" y="240" fill="#94a3b8" font-size="26" font-weight="700" text-anchor="middle" class="font-sans" letter-spacing="5">DAYS</text>
+      </g>
+
+      <!-- Card 2: HOURS -->
+      <g transform="translate(360, 0)" filter="url(#mCardShadow)">
+        <rect x="0" y="0" width="320" height="290" rx="38" fill="url(#mGlassCardGrad)" stroke="url(#mGlassRimGrad)" stroke-width="3" />
+        <line x1="40" y1="3" x2="280" y2="3" stroke="rgba(255, 255, 255, 0.6)" stroke-width="2" stroke-linecap="round" />
+        <text x="160" y="165" fill="#ffffff" font-size="124" font-weight="800" text-anchor="middle" class="font-sans" filter="url(#mSubtleGlow)" letter-spacing="-3">00</text>
+        <text x="160" y="240" fill="#94a3b8" font-size="26" font-weight="700" text-anchor="middle" class="font-sans" letter-spacing="5">HOURS</text>
+      </g>
+
+      <!-- Card 3: MINUTES -->
+      <g transform="translate(720, 0)" filter="url(#mCardShadow)">
+        <rect x="0" y="0" width="320" height="290" rx="38" fill="url(#mGlassCardGrad)" stroke="url(#mGlassRimGrad)" stroke-width="3" />
+        <line x1="40" y1="3" x2="280" y2="3" stroke="rgba(255, 255, 255, 0.6)" stroke-width="2" stroke-linecap="round" />
+        <text x="160" y="165" fill="#ffffff" font-size="124" font-weight="800" text-anchor="middle" class="font-sans" filter="url(#mSubtleGlow)" letter-spacing="-3">00</text>
+        <text x="160" y="240" fill="#94a3b8" font-size="26" font-weight="700" text-anchor="middle" class="font-sans" letter-spacing="5">MINUTES</text>
+      </g>
+
+      <!-- Card 4: SECONDS -->
+      <g transform="translate(1080, 0)" filter="url(#mCardShadow)">
+        <rect x="0" y="0" width="320" height="290" rx="38" fill="url(#mGlassCardGrad)" stroke="url(#mActiveNeonBorder)" stroke-width="3.5" filter="url(#mNeonGlowCyan)" />
+        <line x1="40" y1="3" x2="280" y2="3" stroke="#00f0ff" stroke-width="3" stroke-linecap="round" />
+        <text x="160" y="165" fill="#ffffff" font-size="124" font-weight="800" text-anchor="middle" class="font-sans" filter="url(#mNeonGlowCyan)" letter-spacing="-3">00</text>
+        <text x="160" y="240" fill="#00f0ff" font-size="26" font-weight="700" text-anchor="middle" class="font-sans" letter-spacing="5">SECONDS</text>
+      </g>
+
+    </g>
+
+    <!-- Sub-status badge under countdown -->
+    <g transform="translate(-250, 560)">
+      <rect x="0" y="0" width="500" height="60" rx="30" fill="rgba(10, 16, 32, 0.85)" stroke="rgba(0, 240, 255, 0.28)" stroke-width="1.5" />
+      <text x="250" y="38" fill="#38bdf8" font-size="20" font-weight="700" text-anchor="middle" class="font-mono" letter-spacing="2">
+        HARD CUTOFF: 11:59:59 PM PACIFIC TIME
+      </text>
+    </g>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- 9. RIGHT WING: 6-STAGE BACKWARD TIMELINE & MILESTONES        -->
+  <!-- ============================================================ -->
+  <g transform="translate(2700, 280)">
+    
+    <!-- 6-Stage Timeline HUD Ribbon Box -->
+    <g transform="translate(0, 0)" filter="url(#mCardShadow)">
+      <rect x="0" y="0" width="980" height="270" rx="32" fill="url(#mGlassCardGrad)" stroke="rgba(0, 240, 255, 0.3)" stroke-width="2" />
+      
+      <!-- Header -->
+      <g transform="translate(40, 48)">
+        <circle cx="12" cy="12" r="6" fill="#00f0ff" filter="url(#mNeonGlowCyan)" />
+        <text x="32" y="20" fill="#00f0ff" font-size="22" font-weight="800" class="font-mono" letter-spacing="2">6-STAGE BACKWARD TIMELINE</text>
+        <text x="900" y="20" fill="#94a3b8" font-size="18" font-weight="600" text-anchor="end" class="font-mono">GATEWAY: 9:00 PM PT</text>
+      </g>
+
+      <!-- Interactive Node Row -->
+      <g transform="translate(50, 130)">
+        <!-- Horizontal connector line -->
+        <line x1="30" y1="0" x2="850" y2="0" stroke="rgba(120, 160, 255, 0.3)" stroke-width="3" />
+        <line x1="30" y1="0" x2="520" y2="0" stroke="#00f0ff" stroke-width="3.5" filter="url(#mSubtleGlow)" />
+
+        <!-- Node 1: GOAL -->
+        <g transform="translate(30, 0)">
+          <circle cx="0" cy="0" r="18" fill="#0284c7" stroke="#38bdf8" stroke-width="2" />
+          <polyline points="-6,0 -2,4 6,-4" fill="none" stroke="#fff" stroke-width="2.5" />
+          <text x="0" y="38" fill="#38bdf8" font-size="15" font-weight="800" text-anchor="middle" class="font-mono">GOAL</text>
+        </g>
+
+        <!-- Node 2: PREP -->
+        <g transform="translate(194, 0)">
+          <circle cx="0" cy="0" r="18" fill="#0284c7" stroke="#38bdf8" stroke-width="2" />
+          <polyline points="-6,0 -2,4 6,-4" fill="none" stroke="#fff" stroke-width="2.5" />
+          <text x="0" y="38" fill="#38bdf8" font-size="15" font-weight="800" text-anchor="middle" class="font-mono">PREP</text>
+        </g>
+
+        <!-- Node 3: BUILD -->
+        <g transform="translate(358, 0)">
+          <circle cx="0" cy="0" r="18" fill="#0284c7" stroke="#38bdf8" stroke-width="2" />
+          <polyline points="-6,0 -2,4 6,-4" fill="none" stroke="#fff" stroke-width="2.5" />
+          <text x="0" y="38" fill="#38bdf8" font-size="15" font-weight="800" text-anchor="middle" class="font-mono">BUILD</text>
+        </g>
+
+        <!-- Node 4: TEST (Active) -->
+        <g transform="translate(522, 0)">
+          <circle cx="0" cy="0" r="22" fill="#00f0ff" stroke="#ffffff" stroke-width="3" filter="url(#mNeonGlowCyan)" />
+          <text x="0" y="7" fill="#030712" font-size="16" font-weight="900" text-anchor="middle" class="font-mono">04</text>
+          <text x="0" y="44" fill="#00f0ff" font-size="16" font-weight="800" text-anchor="middle" class="font-mono">TEST</text>
+        </g>
+
+        <!-- Node 5: REVIEW -->
+        <g transform="translate(686, 0)">
+          <circle cx="0" cy="0" r="18" fill="#0f172a" stroke="#64748b" stroke-width="2" />
+          <text x="0" y="6" fill="#94a3b8" font-size="14" font-weight="700" text-anchor="middle" class="font-mono">05</text>
+          <text x="0" y="38" fill="#94a3b8" font-size="15" font-weight="700" text-anchor="middle" class="font-mono">REVIEW</text>
+        </g>
+
+        <!-- Node 6: SUBMIT (Target) -->
+        <g transform="translate(850, 0)">
+          <circle cx="0" cy="0" r="20" fill="#881337" stroke="#f43f5e" stroke-width="2.5" />
+          <text x="0" y="6" fill="#f43f5e" font-size="14" font-weight="800" text-anchor="middle" class="font-mono">06</text>
+          <text x="0" y="40" fill="#f43f5e" font-size="15" font-weight="800" text-anchor="middle" class="font-mono">SUBMIT</text>
+        </g>
+      </g>
+
+      <!-- Active Stage Details Readout -->
+      <g transform="translate(40, 200)">
+        <rect x="0" y="0" width="900" height="48" rx="12" fill="rgba(8, 14, 26, 0.7)" stroke="rgba(120, 160, 255, 0.15)" stroke-width="1.5" />
+        <text x="24" y="31" fill="#00f0ff" font-size="17" font-weight="700" class="font-sans">04 — TESTING &amp; POLISH:</text>
+        <text x="235" y="31" fill="#e2e8f0" font-size="17" font-weight="500" class="font-sans">Verify responsive 9:16 &amp; 16:9, audio &amp; performance</text>
+        <text x="876" y="31" fill="#38bdf8" font-size="16" font-weight="700" text-anchor="end" class="font-mono">NOV 22 • 10PM PT</text>
+      </g>
+    </g>
+
+    <!-- 3 Milestone Cards -->
+    <g transform="translate(0, 310)">
+      
+      <!-- 01 PLAN (Achieved) -->
+      <g transform="translate(0, 0)" filter="url(#mCardShadow)">
+        <rect x="0" y="0" width="980" height="180" rx="30" fill="rgba(13, 20, 38, 0.65)" stroke="rgba(56, 189, 248, 0.3)" stroke-width="2" />
+        
+        <g transform="translate(36, 40)">
+          <rect x="0" y="0" width="100" height="100" rx="24" fill="rgba(14, 165, 233, 0.18)" stroke="#38bdf8" stroke-width="2" />
+          <polyline points="30,52 44,66 70,40" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+
+        <text x="165" y="80" fill="#ffffff" font-size="34" font-weight="800" class="font-sans" letter-spacing="1">01 — PLAN</text>
+        <text x="165" y="125" fill="#94a3b8" font-size="24" font-weight="500" class="font-sans">Break the deadline into achievable tasks.</text>
+
+        <g transform="translate(760, 56)">
+          <rect x="0" y="0" width="180" height="52" rx="16" fill="rgba(56, 189, 248, 0.15)" stroke="#38bdf8" stroke-width="1.5" />
+          <text x="90" y="35" fill="#38bdf8" font-size="20" font-weight="700" text-anchor="middle" class="font-mono">ACHIEVED</text>
+        </g>
+      </g>
+
+      <!-- 02 BUILD (Active / In Progress) -->
+      <g transform="translate(0, 210)" filter="url(#mCardShadow)">
+        <rect x="0" y="0" width="980" height="180" rx="30" fill="rgba(16, 26, 52, 0.8)" stroke="url(#mActiveNeonBorder)" stroke-width="3" filter="url(#mNeonGlowCyan)" />
+        
+        <g transform="translate(36, 40)">
+          <rect x="0" y="0" width="100" height="100" rx="24" fill="rgba(0, 240, 255, 0.25)" stroke="#00f0ff" stroke-width="2.5" filter="url(#mSubtleGlow)" />
+          <text x="50" y="66" fill="#ffffff" font-size="40" font-weight="800" text-anchor="middle" class="font-sans">02</text>
+        </g>
+
+        <text x="165" y="80" fill="#ffffff" font-size="34" font-weight="800" class="font-sans" letter-spacing="1">02 — BUILD</text>
+        <text x="165" y="125" fill="#cbd5e1" font-size="24" font-weight="500" class="font-sans">Complete the project and prepare the final submission.</text>
+
+        <g transform="translate(730, 56)">
+          <rect x="0" y="0" width="210" height="52" rx="16" fill="rgba(0, 240, 255, 0.2)" stroke="#00f0ff" stroke-width="2" filter="url(#mSubtleGlow)" />
+          <text x="105" y="35" fill="#00f0ff" font-size="20" font-weight="800" text-anchor="middle" class="font-mono">IN PROGRESS</text>
+        </g>
+      </g>
+
+      <!-- 03 SUBMIT (Upcoming) -->
+      <g transform="translate(0, 420)" filter="url(#mCardShadow)">
+        <rect x="0" y="0" width="980" height="180" rx="30" fill="rgba(10, 16, 32, 0.5)" stroke="rgba(120, 160, 255, 0.16)" stroke-width="2" />
+        
+        <g transform="translate(36, 40)">
+          <rect x="0" y="0" width="100" height="100" rx="24" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.5" />
+          <text x="50" y="66" fill="#64748b" font-size="40" font-weight="800" text-anchor="middle" class="font-sans">03</text>
+        </g>
+
+        <text x="165" y="80" fill="#94a3b8" font-size="34" font-weight="800" class="font-sans" letter-spacing="1">03 — SUBMIT</text>
+        <text x="165" y="125" fill="#64748b" font-size="24" font-weight="500" class="font-sans">Review everything and submit before the deadline.</text>
+
+        <g transform="translate(760, 56)">
+          <rect x="0" y="0" width="180" height="52" rx="16" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1" />
+          <text x="90" y="35" fill="#64748b" font-size="20" font-weight="700" text-anchor="middle" class="font-mono">UPCOMING</text>
+        </g>
+      </g>
+
+    </g>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- 10. BOTTOM GLOBAL FOOTER BAR                                -->
+  <!-- ============================================================ -->
+  <g transform="translate(160, 2020)">
+    <!-- Left indicator: Next Milestone -->
+    <g transform="translate(0, 0)">
+      <text x="0" y="24" fill="#00f0ff" font-size="20" font-weight="700" class="font-mono" letter-spacing="1.5">NEXT MILESTONE → 03 SUBMIT GATEWAY</text>
+    </g>
+
+    <!-- Center System Status -->
+    <g transform="translate(1500, 0)">
+      <text x="260" y="24" fill="#64748b" font-size="18" font-weight="600" text-anchor="middle" class="font-mono">
+        RESOLUTION: 3840 × 2160 4K UHD // DISPLAY ASSET
+      </text>
+    </g>
+
+    <!-- Right Indicator: Priority -->
+    <g transform="translate(3520, 0)">
+      <text x="0" y="24" fill="#e2e8f0" font-size="20" font-weight="600" text-anchor="end" class="font-sans">
+        PRIORITY: <tspan fill="#00f0ff">Polish &amp; Final Review</tspan>
+      </text>
+    </g>
+  </g>
+
+</svg>
